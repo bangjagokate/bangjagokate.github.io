@@ -29,12 +29,12 @@
       text-align: center;
       height: 100vh;
       padding: 20px;
-      color: #00bfff; /* Warna biru muda neon */
+      color: #00bfff;
     }
 
     .line {
       font-size: 6vw;
-      color: #00bfff; /* Warna biru muda neon */
+      color: #00bfff;
       text-shadow: 0 0 5px #00bfff, 0 0 10px #00bfff;
       white-space: nowrap;
       overflow: hidden;
@@ -58,7 +58,7 @@
     }
 
     .highlight {
-      background-color: #32cd32; /* Warna hijau neon */
+      background-color: #32cd32;
       color: #000000;
       padding: 5px 10px;
       border-radius: 5px;
@@ -66,19 +66,13 @@
       box-shadow: 0 0 10px #32cd32;
       display: inline-block;
       animation: fadeInOut 2s infinite alternate;
-      cursor: pointer; /* Menambahkan pointer saat hover */
+      cursor: pointer;
     }
 
     @keyframes fadeInOut {
-      0% {
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-      }
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
     }
 
     @media (max-width: 480px) {
@@ -91,8 +85,8 @@
 <body>
   <canvas id="matrix"></canvas>
 
-  <audio id="bg-music" loop muted autoplay>
-    <source src="https://files.catbox.moe/ji3455.mp3" type="audio/mp3">
+  <audio id="bg-music" loop autoplay>
+    <source src="https://bangjagokate.github.io/7437830140144831287.mp3" type="audio/mp3">
   </audio>
 
   <div class="container">
@@ -101,7 +95,6 @@
     <div id="line3" class="line">TERIMA JASA JOKI GAME</div>
     <div id="line4" class="line">SAUSAGE MAN</div>
     <div id="line5" class="line">CHAT TELEGRAM</div>
-    <!-- Teks dengan highlight hijau neon, sekarang memiliki link ke Telegram -->
     <a href="https://t.me/jagokate" target="_blank">
       <div class="highlight">JAGOKATE</div>
     </a>
@@ -111,13 +104,11 @@
     const audio = document.getElementById('bg-music');
     audio.volume = 1.0;
 
-    // Fungsi untuk mengaktifkan musik secara otomatis setelah 1 detik
+    // Paksa play setelah 1 detik
     setTimeout(() => {
-      audio.muted = false; // Menghilangkan mute setelah 1 detik
-      audio.play(); // Memulai musik dengan suara
-    }, 1000); // 1000 ms = 1 detik
+      audio.play().catch(err => console.warn("Autoplay error:", err));
+    }, 1000);
 
-    // Menambahkan animasi untuk tampilan teks
     const lines = [
       document.getElementById("line1"),
       document.getElementById("line2"),
@@ -131,7 +122,7 @@
       }, i * 2200);
     });
 
-    // MATRIX BACKGROUND ANIMATION
+    // MATRIX BACKGROUND
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
@@ -141,14 +132,13 @@
     const letters = "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const fontSize = 14;
     const columns = canvas.width / fontSize;
-
     const drops = Array(Math.floor(columns)).fill(1);
 
     function drawMatrix() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#00bfff"; // Warna tulisan matrik biru muda neon
+      ctx.fillStyle = "#00bfff";
       ctx.font = fontSize + "px monospace";
 
       for (let i = 0; i < drops.length; i++) {
@@ -158,7 +148,6 @@
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
-
         drops[i]++;
       }
     }
