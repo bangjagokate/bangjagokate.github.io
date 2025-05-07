@@ -29,12 +29,12 @@
       text-align: center;
       height: 100vh;
       padding: 20px;
-      color: #00bfff; /* Biru Muda Neon */
+      color: #00bfff; /* Warna biru muda neon */
     }
 
     .line {
       font-size: 6vw;
-      color: #00bfff; /* Biru Muda Neon */
+      color: #00bfff; /* Warna biru muda neon */
       text-shadow: 0 0 5px #00bfff, 0 0 10px #00bfff;
       white-space: nowrap;
       overflow: hidden;
@@ -57,33 +57,28 @@
       50% { border-color: #00bfff; }
     }
 
-    a {
-      color: #00bfff; /* Biru Muda Neon */
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    a:hover {
-      color: #ff0; /* Warna saat hover */
-    }
-
     .highlight {
-      background-color: #32cd32; /* Hijau Neon */
-      color: #fff; /* Teks putih */
-      padding: 0 5px;
-      border-radius: 3px;
+      background-color: #32cd32; /* Warna hijau neon */
+      color: #000000;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 1.2em;
+      box-shadow: 0 0 10px #32cd32;
+      display: inline-block;
+      animation: fadeInOut 2s infinite alternate;
+      cursor: pointer; /* Menambahkan pointer saat hover */
     }
 
-    button {
-      margin-top: 30px;
-      padding: 12px 24px;
-      background: #00bfff; /* Biru Muda Neon */
-      color: #000;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      box-shadow: 0 0 10px #00bfff; /* Biru Muda Neon */
-      cursor: pointer;
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
     }
 
     @media (max-width: 480px) {
@@ -96,7 +91,7 @@
 <body>
   <canvas id="matrix"></canvas>
 
-  <audio id="bg-music" loop>
+  <audio id="bg-music" loop muted autoplay>
     <source src="https://files.catbox.moe/ji3455.mp3" type="audio/mp3">
   </audio>
 
@@ -105,18 +100,24 @@
     <div id="line2" class="line">BANG JAGO SITE</div>
     <div id="line3" class="line">TERIMA JASA JOKI GAME</div>
     <div id="line4" class="line">SAUSAGE MAN</div>
-    <div id="line5" class="line">CHAT TELEGRAM <a href="https://t.me/jagokate" target="_blank" class="highlight">@jagokate</a></div>
-    <button onclick="playMusic()">PLAY MUSIK</button>
+    <div id="line5" class="line">CHAT TELEGRAM</div>
+    <!-- Teks dengan highlight hijau neon, sekarang memiliki link ke Telegram -->
+    <a href="https://t.me/jagokate" target="_blank">
+      <div class="highlight">JAGOKATE</div>
+    </a>
   </div>
 
   <script>
     const audio = document.getElementById('bg-music');
     audio.volume = 1.0;
 
-    function playMusic() {
-      audio.play();
-    }
+    // Fungsi untuk mengaktifkan musik secara otomatis setelah 1 detik
+    setTimeout(() => {
+      audio.muted = false; // Menghilangkan mute setelah 1 detik
+      audio.play(); // Memulai musik dengan suara
+    }, 1000); // 1000 ms = 1 detik
 
+    // Menambahkan animasi untuk tampilan teks
     const lines = [
       document.getElementById("line1"),
       document.getElementById("line2"),
@@ -147,7 +148,7 @@
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#00bfff"; /* Biru Muda Neon */
+      ctx.fillStyle = "#00bfff"; // Warna tulisan matrik biru muda neon
       ctx.font = fontSize + "px monospace";
 
       for (let i = 0; i < drops.length; i++) {
