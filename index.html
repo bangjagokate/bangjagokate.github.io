@@ -1,83 +1,107 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bang Jago Site</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden;
+      background: black;
+      color: #00bfff;
       font-family: 'Courier New', monospace;
+      overflow: hidden;
     }
-
     canvas {
       position: fixed;
       top: 0;
       left: 0;
-      z-index: -1;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
     }
-
-    .container {
-      position: relative;
+    #intro, #main {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.85);
       text-align: center;
-      height: 100vh;
-      padding: 20px;
-      color: #00bfff;
     }
-
-    .line {
-      font-size: 6vw;
-      color: #00bfff;
-      text-shadow: 0 0 5px #00bfff, 0 0 10px #00bfff;
+    #intro .title {
+      font-size: 6vw; /* Sesuaikan dengan lebar layar */
+      border-right: 2px solid #00bfff;
       white-space: nowrap;
       overflow: hidden;
-      border-right: 2px solid #00bfff;
       width: 0;
-      margin: 10px auto;
+      animation: typing 2s steps(20, end) forwards, blink 0.8s step-end infinite;
     }
-
-    .line.show {
-      animation: typing 2s steps(30, end) forwards, blink 0.75s step-end infinite;
-    }
-
     @keyframes typing {
       from { width: 0 }
       to { width: 100% }
     }
-
     @keyframes blink {
-      0%, 100% { border-color: transparent }
-      50% { border-color: #00bfff; }
+      50% { border-color: transparent }
     }
-
+    .enter-btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: #00bfff;
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #00bfff;
+      cursor: pointer;
+      font-size: 1.1em;
+    }
+    .enter-btn:hover {
+      transform: scale(1.05);
+    }
+    .line {
+      font-size: 2em;
+      margin: 10px;
+      border-right: 2px solid #00bfff;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+    }
+    .line.show {
+      animation: typing 2s steps(30, end) forwards, blink 0.75s step-end infinite;
+    }
     .highlight {
-      background-color: #32cd32;
-      color: #000000;
+      background-color: #00bfff;
+      color: black;
       padding: 5px 10px;
       border-radius: 5px;
       font-size: 1.2em;
-      box-shadow: 0 0 10px #32cd32;
+      box-shadow: 0 0 10px #00bfff;
       display: inline-block;
-      animation: fadeInOut 2s infinite alternate;
-      cursor: pointer;
+      margin-top: 20px;
+      animation: blinkHighlight 1s infinite alternate; /* Menambahkan animasi berkedip */
     }
 
-    @keyframes fadeInOut {
-      0% { opacity: 0; }
-      50% { opacity: 1; }
-      100% { opacity: 0; }
+    @keyframes blinkHighlight {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
     }
 
+    /* Menyesuaikan ukuran font untuk layar kecil */
     @media (max-width: 480px) {
+      #intro .title {
+        font-size: 10vw; /* Menyesuaikan ukuran font untuk layar kecil */
+      }
       .line {
-        font-size: 5vw;
+        font-size: 1.5em;
       }
     }
   </style>
@@ -85,66 +109,46 @@
 <body>
   <canvas id="matrix"></canvas>
 
-  <audio id="bg-music" loop autoplay>
-    <source src="https://bangjagokate.github.io/7437830140144831287.mp3" type="audio/mp3">
+  <audio id="bg-music" loop>
+    <source src="https://files.catbox.moe/ji3455.mp3" type="audio/mp3" />
   </audio>
 
-  <div class="container">
-    <div id="line1" class="line">WELCOME TO</div>
-    <div id="line2" class="line">BANG JAGO SITE</div>
-    <div id="line3" class="line">TERIMA JASA JOKI GAME</div>
-    <div id="line4" class="line">SAUSAGE MAN</div>
-    <div id="line5" class="line">CHAT TELEGRAM</div>
+  <div id="intro">
+    <div class="title">BANG JAGO SITE</div>
+    <button class="enter-btn" onclick="enterSite()">TEKAN UNTUK MEMASUKI WEBSITE</button>
+  </div>
+
+  <div id="main" style="display:none;">
+    <div class="line" id="line1">WELCOME TO</div>
+    <div class="line" id="line2">BANG JAGO SITE</div>
+    <div class="line" id="line3">TERIMA JASA JOKI GAME</div>
+    <div class="line" id="line4">SAUSAGE MAN</div>
+    <div class="line" id="line5">CHAT TELEGRAM</div>
     <a href="https://t.me/jagokate" target="_blank">
       <div class="highlight">JAGOKATE</div>
     </a>
   </div>
 
   <script>
-    const audio = document.getElementById('bg-music');
-    audio.volume = 1.0;
-
-    // Paksa play setelah 1 detik
-    setTimeout(() => {
-      audio.play().catch(err => console.warn("Autoplay error:", err));
-    }, 1000);
-
-    const lines = [
-      document.getElementById("line1"),
-      document.getElementById("line2"),
-      document.getElementById("line3"),
-      document.getElementById("line4"),
-      document.getElementById("line5")
-    ];
-    lines.forEach((line, i) => {
-      setTimeout(() => {
-        line.classList.add("show");
-      }, i * 2200);
-    });
-
-    // MATRIX BACKGROUND
+    // Matrix effect diperjelas
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
-
-    canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     const letters = "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
+    const fontSize = 18; // diperbesar
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = new Array(columns).fill(1);
 
     function drawMatrix() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.07)"; // lebih terang
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = "#00bfff";
+      ctx.fillStyle = "#00ffff"; // warna lebih terang
       ctx.font = fontSize + "px monospace";
-
       for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        const text = letters[Math.floor(Math.random() * letters.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
@@ -152,7 +156,30 @@
       }
     }
 
-    setInterval(drawMatrix, 33);
+    setInterval(drawMatrix, 30);
+
+    function enterSite() {
+      document.getElementById("intro").style.display = "none";
+      document.getElementById("main").style.display = "flex";
+      const audio = document.getElementById("bg-music");
+      audio.play().catch(e => console.warn("Autoplay error:", e));
+
+      const lines = [
+        document.getElementById("line1"),
+        document.getElementById("line2"),
+        document.getElementById("line3"),
+        document.getElementById("line4"),
+        document.getElementById("line5")
+      ];
+      lines.forEach((line, i) => {
+        setTimeout(() => line.classList.add("show"), i * 2000);
+      });
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
   </script>
 </body>
 </html>
