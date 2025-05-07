@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Bang Jago Site</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      padding: 20px;
+      color: #00bfff; /* Biru Muda Neon */
+    }
+
+    .line {
+      font-size: 6vw;
+      color: #00bfff; /* Biru Muda Neon */
+      text-shadow: 0 0 5px #00bfff, 0 0 10px #00bfff;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #00bfff;
+      width: 0;
+      margin: 10px auto;
+    }
+
+    .line.show {
+      animation: typing 2s steps(30, end) forwards, blink 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink {
+      0%, 100% { border-color: transparent }
+      50% { border-color: #00bfff; }
+    }
+
+    a {
+      color: #00bfff; /* Biru Muda Neon */
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      color: #ff0; /* Warna saat hover */
+    }
+
+    .highlight {
+      background-color: #32cd32; /* Hijau Neon */
+      color: #fff; /* Teks putih */
+      padding: 0 5px;
+      border-radius: 3px;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      background: #00bfff; /* Biru Muda Neon */
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 0 10px #00bfff; /* Biru Muda Neon */
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      .line {
+        font-size: 5vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+
+  <audio id="bg-music" loop>
+    <source src="https://files.catbox.moe/ji3455.mp3" type="audio/mp3">
+  </audio>
+
+  <div class="container">
+    <div id="line1" class="line">WELCOME TO</div>
+    <div id="line2" class="line">BANG JAGO SITE</div>
+    <div id="line3" class="line">TERIMA JASA JOKI GAME</div>
+    <div id="line4" class="line">SAUSAGE MAN</div>
+    <div id="line5" class="line">CHAT TELEGRAM <a href="https://t.me/jagokate" target="_blank" class="highlight">@jagokate</a></div>
+    <button onclick="playMusic()">PLAY MUSIK</button>
+  </div>
+
+  <script>
+    const audio = document.getElementById('bg-music');
+    audio.volume = 1.0;
+
+    function playMusic() {
+      audio.play();
+    }
+
+    const lines = [
+      document.getElementById("line1"),
+      document.getElementById("line2"),
+      document.getElementById("line3"),
+      document.getElementById("line4"),
+      document.getElementById("line5")
+    ];
+    lines.forEach((line, i) => {
+      setTimeout(() => {
+        line.classList.add("show");
+      }, i * 2200);
+    });
+
+    // MATRIX BACKGROUND ANIMATION
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const letters = "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#00bfff"; /* Biru Muda Neon */
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 33);
+  </script>
+</body>
+</html>
