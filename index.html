@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R_Pambudi - Web Tools</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow-x: hidden;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+        
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+        
+        .profile-section {
+            width: 300px;
+            padding: 30px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-right: 1px solid #0f0;
+            box-shadow: 0 0 20px #0f0;
+        }
+        
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #0f0;
+            margin: 0 auto 20px;
+            display: block;
+            object-fit: cover;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .card {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid #0f0;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px #0f0;
+        }
+        
+        h1, h2, h3 {
+            text-shadow: 0 0 10px #0f0;
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 10px;
+        }
+        
+        .glitch {
+            animation: glitch 1.5s linear infinite;
+        }
+        
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 #00fffc, -0.05em -0.025em 0 #fc00ff; }
+            14% { text-shadow: 0.05em 0 0 #00fffc, -0.05em -0.025em 0 #fc00ff; }
+            15% { text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.025em 0 #fc00ff; }
+            49% { text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.025em 0 #fc00ff; }
+            50% { text-shadow: 0.025em 0.05em 0 #00fffc, 0.05em 0 0 #fc00ff; }
+            99% { text-shadow: 0.025em 0.05em 0 #00fffc, 0.05em 0 0 #fc00ff; }
+            100% { text-shadow: -0.025em 0 0 #00fffc, -0.025em -0.025em 0 #fc00ff; }
+        }
+        
+        .link {
+            color: #0f0;
+            text-decoration: none;
+            border: 1px solid #0f0;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        
+        .link:hover {
+            background-color: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0;
+        }
+        
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .skill {
+            background: rgba(0, 255, 0, 0.2);
+            padding: 5px 10px;
+            border: 1px solid #0f0;
+        }
+        
+        /* Splash Screen */
+        .splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            transition: opacity 1s;
+        }
+        
+        .splash h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        .splash-btn {
+            padding: 15px 30px;
+            background: transparent;
+            color: #0f0;
+            border: 2px solid #0f0;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .splash-btn:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); text-shadow: 0 0 10px #0f0; }
+            50% { transform: scale(1.1); text-shadow: 0 0 20px #0f0; }
+            100% { transform: scale(1); text-shadow: 0 0 10px #0f0; }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .profile-section {
+                width: auto;
+                border-right: none;
+                border-bottom: 1px solid #0f0;
+            }
+            
+            .splash h1 {
+                font-size: 2em;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div class="splash" id="splash">
+        <h1 class="glitch">R_PAMBUDI</h1>
+        <p>Web Developer & Tools Creator</p>
+        <button class="splash-btn" id="enterBtn">ENTER THE MATRIX</button>
+    </div>
+
+    <canvas id="matrix"></canvas>
+    
+    <div class="container" id="mainContent">
+        <!-- Profil Section -->
+        <div class="profile-section">
+            <img src="https://i.postimg.cc/4nRJM6cH/1748525921119.jpg" alt="R_Pambudi" class="profile-pic">
+            <h2 class="glitch">R_Pambudi</h2>
+            <p>Web Developer & Tools Creator</p>
+            
+            <h3>About Me</h3>
+            <p>Saya seorang pengembang web NEWBIE & otodidak yang berspesialisasi dalam pembuatan tools digital yang bermanfaat</p>
+            
+            <h3>Skills</h3>
+            <div class="skills">
+                <span class="skill">HTML/CSS</span>
+                <span class="skill">JavaScript</span>
+                <span class="skill">PHP</span>
+                <span class="skill">Python</span>
+                <span class="skill">UI Design</span>
+            </div>
+            
+            <h3>Contact</h3>
+            <p>
+                Email: jagokate999@gmail.com<br>
+                GitHub: github.com/bangjagokate<br>
+                Telegram: t.me/JagoKate
+            </p>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="card">
+                <h1 class="glitch">WEB TOOLS COLLECTION</h1>
+                <p>Kumpulan berbagai alat digital yang saya buat untuk memudahkan pekerjaan sehari-hari.</p>
+            </div>
+            
+            <div class="card">
+                <h2>My Tools</h2>
+                <div>
+                    <a href="https://qrcodefree.ct.ws" class="link" target="_blank">QR Generator</a>
+                    <a href="image-uploader.html" class="link">Image Uploader</a>
+                    <a href="https://ngobrolsantai.ct.ws" class="link" target="_blank">Web Chat Anonymous</a>
+                    <a href="https://indonesianht.ct.ws/" class="link" target="_blank">Walkietalkie Web V1</a>
+                    <a href="https://bangjagokate.github.io/Ht/Index.html" class="link" target="_blank">Walkietalkie Web V2</a>
+                    <a href="https://uploadfile.ct.ws/" class="link" target="_blank">Foto Uploader Unlimited</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Latest Projects</h2>
+                <h3>QR Generator Pro</h3>
+                <p>Generator QR code dengan fitur custom design dan analytics.</p>
+                
+                <h3>File Uploader Unlimited</h3>
+                <p>Tool untuk meng upload gambar tanpa batasan waktu dan banyak nya tanpa login tanpa register. fotonkamu akan tersimoan aman di sana.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Element (hidden) -->
+    <audio id="matrixAudio" loop>
+        <source src="https://drive.usercontent.google.com/u/0/uc?id=1-FxHbVcp7lY4hGMK7Z4nU-9obEfWEifA&export=download" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Matrix Animation
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.floor(Math.random() * -100);
+        }
+        
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+        }
+        
+        setInterval(draw, 33);
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Splash Screen and Music
+        const splash = document.getElementById('splash');
+        const enterBtn = document.getElementById('enterBtn');
+        const mainContent = document.getElementById('mainContent');
+        const matrixAudio = document.getElementById('matrixAudio');
+
+        // Function to handle audio play with user interaction
+        function playAudio() {
+            // Create a promise to play audio
+            const playPromise = matrixAudio.play();
+            
+            // Handle promise rejection (common in browsers that block autoplay)
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Autoplay prevented, waiting for user interaction");
+                    // Show a message or handle the error as needed
+                });
+            }
+        }
+
+        // Enter button click handler
+        enterBtn.addEventListener('click', () => {
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+            }, 1000);
+            
+            // Play music after splash screen is clicked (user interaction)
+            playAudio();
+        });
+
+        // Try to play audio when page loads (may be blocked by browser)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Some browsers require user interaction first
+            // We'll try to play after splash screen is clicked
+        });
+    </script>
+</body>
+</html>
