@@ -252,7 +252,7 @@
 
     <!-- Audio Element (hidden) -->
     <audio id="matrixAudio" loop>
-        <source src="https://drive.usercontent.google.com/u/0/uc?id=1-FxHbVcp7lY4hGMK7Z4nU-9obEfWEifA&export=download" type="audio/mpeg">
+        <source src="https://files.catbox.moe/ltj1az.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
@@ -302,38 +302,37 @@
         // Splash Screen and Music
         const splash = document.getElementById('splash');
         const enterBtn = document.getElementById('enterBtn');
-        const mainContent = document.getElementById('mainContent');
         const matrixAudio = document.getElementById('matrixAudio');
 
-        // Function to handle audio play with user interaction
+        // Function to handle audio play
         function playAudio() {
-            // Create a promise to play audio
+            matrixAudio.volume = 0.5; // Set volume to 50%
             const playPromise = matrixAudio.play();
             
-            // Handle promise rejection (common in browsers that block autoplay)
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
-                    console.log("Autoplay prevented, waiting for user interaction");
-                    // Show a message or handle the error as needed
+                    // Show message if autoplay is blocked
+                    console.log("Autoplay was prevented. Please click the button to play audio.");
                 });
             }
         }
 
         // Enter button click handler
-        enterBtn.addEventListener('click', () => {
+        enterBtn.addEventListener('click', function() {
+            // Start playing audio first
+            playAudio();
+            
+            // Then hide the splash screen
             splash.style.opacity = '0';
             setTimeout(() => {
                 splash.style.display = 'none';
             }, 1000);
-            
-            // Play music after splash screen is clicked (user interaction)
-            playAudio();
         });
 
-        // Try to play audio when page loads (may be blocked by browser)
-        document.addEventListener('DOMContentLoaded', () => {
-            // Some browsers require user interaction first
-            // We'll try to play after splash screen is clicked
+        // Try to play audio when page loads (may not work due to browser restrictions)
+        window.addEventListener('load', function() {
+            // Some browsers require user interaction before playing audio
+            // We'll rely on the button click instead
         });
     </script>
 </body>
