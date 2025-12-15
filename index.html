@@ -1,353 +1,1600 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R_Pambudi - Web Tools</title>
+    <title>Tools Online Indonesia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            overflow-x: hidden;
-            font-family: 'Courier New', monospace;
-            color: #0f0;
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #6b7280;
         }
         
-        #matrix {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
         }
         
         .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
             display: flex;
-            min-height: 100vh;
-            opacity: 0;
-            animation: fadeIn 2s forwards;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
         }
         
-        .profile-section {
-            width: 300px;
-            padding: 30px;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-right: 1px solid #0f0;
-            box-shadow: 0 0 20px #0f0;
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
         }
         
-        .profile-pic {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 3px solid #0f0;
-            margin: 0 auto 20px;
-            display: block;
-            object-fit: cover;
+        .nav-links {
+            display: flex;
+            gap: 20px;
         }
         
-        .main-content {
-            flex: 1;
-            padding: 30px;
-        }
-        
-        .card {
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 1px solid #0f0;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 15px #0f0;
-        }
-        
-        h1, h2, h3 {
-            text-shadow: 0 0 10px #0f0;
-        }
-        
-        h1 {
-            font-size: 2.2em;
-            border-bottom: 1px solid #0f0;
-            padding-bottom: 10px;
-        }
-        
-        .glitch {
-            animation: glitch 1.5s linear infinite;
-        }
-        
-        @keyframes glitch {
-            0% { text-shadow: 0.05em 0 0 #00fffc, -0.05em -0.025em 0 #fc00ff; }
-            14% { text-shadow: 0.05em 0 0 #00fffc, -0.05em -0.025em 0 #fc00ff; }
-            15% { text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.025em 0 #fc00ff; }
-            49% { text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.025em 0 #fc00ff; }
-            50% { text-shadow: 0.025em 0.05em 0 #00fffc, 0.05em 0 0 #fc00ff; }
-            99% { text-shadow: 0.025em 0.05em 0 #00fffc, 0.05em 0 0 #fc00ff; }
-            100% { text-shadow: -0.025em 0 0 #00fffc, -0.025em -0.025em 0 #fc00ff; }
-        }
-        
-        .link {
-            color: #0f0;
+        .nav-links a {
             text-decoration: none;
-            border: 1px solid #0f0;
-            padding: 10px 20px;
-            margin: 10px 5px;
-            display: inline-block;
-            transition: all 0.3s;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
         }
         
-        .link:hover {
-            background-color: #0f0;
-            color: #000;
-            box-shadow: 0 0 20px #0f0;
+        .nav-links a:hover {
+            color: var(--primary);
         }
         
-        .skills {
+        .user-menu {
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Login Section */
+        .login-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .login-header p {
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-google {
+            background-color: white;
+            color: var(--dark);
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 10px;
-            margin-top: 15px;
+            margin-bottom: 15px;
         }
         
-        .skill {
-            background: rgba(0, 255, 0, 0.2);
-            padding: 5px 10px;
-            border: 1px solid #0f0;
+        .btn-google:hover {
+            background-color: #f8f9fa;
         }
         
-        /* Splash Screen */
-        .splash {
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+        }
+        
+        .divider span {
+            background-color: white;
+            padding: 0 15px;
+            position: relative;
+            color: var(--gray);
+        }
+        
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+            display: none;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tool-icon {
+            font-size: 30px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .tool-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .tool-description {
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
             align-items: center;
-            z-index: 999;
-            transition: opacity 1s;
+            justify-content: center;
         }
         
-        .splash h1 {
-            font-size: 3em;
-            margin-bottom: 30px;
-            animation: pulse 2s infinite;
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
-        .splash-btn {
-            padding: 15px 30px;
-            background: transparent;
-            color: #0f0;
-            border: 2px solid #0f0;
-            font-size: 1.2em;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            color: var(--dark);
+        }
+        
+        .close-modal {
+            font-size: 24px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Courier New', monospace;
+            color: var(--gray);
         }
         
-        .splash-btn:hover {
-            background: #0f0;
-            color: #000;
-            box-shadow: 0 0 20px #0f0;
+        .close-modal:hover {
+            color: var(--dark);
         }
         
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Tool specific styles */
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); text-shadow: 0 0 10px #0f0; }
-            50% { transform: scale(1.1); text-shadow: 0 0 20px #0f0; }
-            100% { transform: scale(1); text-shadow: 0 0 10px #0f0; }
+        .tab-nav button {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--gray);
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
         }
         
+        .tab-nav button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: transform 0.3s;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.error {
+            background-color: var(--danger);
+        }
+        
+        .notification.info {
+            background-color: var(--primary);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning);
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
+            .nav-links {
+                display: none;
             }
             
-            .profile-section {
-                width: auto;
-                border-right: none;
-                border-bottom: 1px solid #0f0;
-            }
-            
-            .splash h1 {
-                font-size: 2em;
-                text-align: center;
+            .tools-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Splash Screen -->
-    <div class="splash" id="splash">
-        <h1 class="glitch">R_PAMBUDI</h1>
-        <p>Web Developer & Tools Creator</p>
-        <button class="splash-btn" id="enterBtn">ENTER THE WEBSITE</button>
-    </div>
-
-    <canvas id="matrix"></canvas>
-    
-    <div class="container" id="mainContent">
-        <!-- Profil Section -->
-        <div class="profile-section">
-            <img src="https://i.postimg.cc/4nRJM6cH/1748525921119.jpg" alt="R_Pambudi" class="profile-pic">
-            <h2 class="glitch">R_Pambudi</h2>
-            <p>Web Developer & Tools Creator</p>
-            
-            <h3>About Me</h3>
-            <p>Saya seorang pengembang web NEWBIE & otodidak yang berspesialisasi dalam pembuatan tools digital yang bermanfaat</p>
-            
-            <h3>Skills</h3>
-            <div class="skills">
-                <span class="skill">HTML/CSS</span>
-                <span class="skill">JavaScript</span>
-                <span class="skill">PHP</span>
-                <span class="skill">Python</span>
-                <span class="skill">UI Design</span>
-            </div>
-            
-            <h3>Contact</h3>
-            <p>
-                Email: jagokate999@gmail.com<br>
-                GitHub: github.com/bangjagokate<br>
-                Telegram: t.me/JagoKate
-            </p>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">ToolsID</div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Beranda</a>
+                    <a href="#" class="nav-link">Tentang</a>
+                    <a href="#" class="nav-link">Bantuan</a>
+                </div>
+                <div class="user-menu">
+                    <div id="userInfo" style="display: none;">
+                        <span id="userName"></span>
+                        <div class="user-avatar" id="userAvatar"></div>
+                    </div>
+                    <button id="loginBtn" class="btn">Masuk</button>
+                </div>
+            </nav>
         </div>
-        
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="card">
-                <h1 class="glitch">WEB TOOLS COLLECTION</h1>
-                <p>Kumpulan berbagai alat digital yang saya buat untuk memudahkan pekerjaan sehari-hari.</p>
+    </header>
+
+    <!-- Login Section -->
+    <section class="login-section" id="loginSection">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>Selamat Datang</h1>
+                <p>Masuk untuk mengakses semua fitur</p>
             </div>
             
-            <div class="card">
-                <h2>My Tools</h2>
-                <div>
-                    <a href="https://qrcodefree.ct.ws" class="link" target="_blank">QR Generator</a>
-                    <a href="https://umkmid.ct.ws/" class="link" target="_blank">Web UMKM</a>
-                    
-                    <a href="https://ngobrolsantai.ct.ws" class="link" target="_blank">Web Chat Anonymous</a>
-                    <a href="https://indonesianht.ct.ws/" class="link" target="_blank">Walkietalkie Web V1</a>
-                    <a href="https://bangjagokate.github.io/Ht/Index.html" class="link" target="_blank">Walkietalkie Web V2</a>
-                    <a href="https://uploadfile.ct.ws/" class="link" target="_blank">Foto Uploader Unlimited</a>
-                    <a href="https://uploadfile.ct.ws/uploader.php" class="link" target="_blank">Mp3 Uploader Unlimited</a>
+            <button id="googleSignInBtn" class="btn btn-block btn-google">
+                <i class="fab fa-google"></i>
+                Masuk dengan Google
+            </button>
+            
+            <div class="divider">
+                <span>atau</span>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="nama@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-block">Masuk</button>
+            </form>
+            
+            <div class="form-footer">
+                <a href="#" id="forgotPasswordLink">Lupa password?</a>
+                <a href="#">Daftar akun baru</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <div class="container">
+            <h1>Alat Digital Indonesia</h1>
+            <p>Tools praktis untuk kebutuhan digital sehari-hari</p>
+            
+            <div class="tools-grid">
+                <!-- QR Code Generator -->
+                <div class="tool-card" data-tool="qr">
+                    <div class="tool-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3 class="tool-title">QR Code Generator</h3>
+                    <p class="tool-description">Buat QR Code untuk teks, URL, atau informasi lainnya dengan cepat</p>
+                    <button class="btn">Gunakan Tool</button>
+                </div>
+                
+                <!-- URL Shortener -->
+                <div class="tool-card" data-tool="shorturl">
+                    <div class="tool-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3 class="tool-title">Short URL</h3>
+                    <p class="tool-description">Perpendek URL panjang menjadi link yang lebih singkat dan mudah dibagikan</p>
+                    <button class="btn">Gunakan Tool</button>
+                </div>
+                
+                <!-- Text Encoder -->
+                <div class="tool-card" data-tool="encode">
+                    <div class="tool-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="tool-title">Text Encoder</h3>
+                    <p class="tool-description">Enkripsi teks untuk keamanan informasi pribadi Anda</p>
+                    <button class="btn">Gunakan Tool</button>
+                </div>
+                
+                <!-- Scam Link Checker -->
+                <div class="tool-card" data-tool="scamcheck">
+                    <div class="tool-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="tool-title">Cek Link Penipuan</h3>
+                    <p class="tool-description">Periksa keamanan link sebelum mengklik untuk menghindari penipuan online</p>
+                    <button class="btn">Gunakan Tool</button>
+                </div>
+                
+                <!-- Secure Notes -->
+                <div class="tool-card" data-tool="notes">
+                    <div class="tool-icon">
+                        <i class="fas fa-sticky-note"></i>
+                    </div>
+                    <h3 class="tool-title">Catatan Online Aman</h3>
+                    <p class="tool-description">Simpan catatan penting Anda secara online dengan enkripsi</p>
+                    <button class="btn">Gunakan Tool</button>
+                </div>
+                
+                <!-- Scammer Database -->
+                <div class="tool-card" data-tool="scammerdb">
+                    <div class="tool-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="tool-title">Database Nomor Penipu</h3>
+                    <p class="tool-description">Cek nomor telepon yang terindikasi sebagai penipuan</p>
+                    <button class="btn">Gunakan Tool</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals for Tools -->
+    <!-- QR Code Modal -->
+    <div class="modal" id="qrModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">QR Code Generator</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="text">Teks</button>
+                <button class="tab-btn" data-tab="url">URL</button>
+                <button class="tab-btn" data-tab="wifi">WiFi</button>
+                <button class="tab-btn" data-tab="contact">Kontak</button>
+            </div>
+            
+            <div class="tab-content active" id="text-tab">
+                <div class="form-group">
+                    <label for="qrText">Masukkan Teks</label>
+                    <textarea id="qrText" class="form-control" rows="4" placeholder="Ketik teks yang ingin diubah menjadi QR Code"></textarea>
+                </div>
+                <button id="generateQR" class="btn btn-block">Buat QR Code</button>
+                <div id="qrResult" class="result-container" style="display: none; text-align: center;">
+                    <img id="qrImage" src="" alt="QR Code">
+                    <p>QR Code berhasil dibuat!</p>
                 </div>
             </div>
             
-            <div class="card">
-                <h2>Latest Projects</h2>
-                <h3>QR Generator Pro</h3>
-                <p>Generator QR code dengan fitur custom design dan analytics.</p>
-                
-                <h3>File Uploader Unlimited</h3>
-                <p>Tool untuk meng upload gambar tanpa batasan waktu dan banyak nya tanpa login tanpa register. fotonkamu akan tersimoan aman di sana.</p>
+            <div class="tab-content" id="url-tab">
+                <div class="form-group">
+                    <label for="qrUrl">Masukkan URL</label>
+                    <input type="url" id="qrUrl" class="form-control" placeholder="https://example.com">
+                </div>
+                <button id="generateQRUrl" class="btn btn-block">Buat QR Code</button>
+                <div id="qrUrlResult" class="result-container" style="display: none; text-align: center;">
+                    <img id="qrUrlImage" src="" alt="QR Code">
+                    <p>QR Code berhasil dibuat!</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="wifi-tab">
+                <div class="form-group">
+                    <label for="wifiSSID">Nama Jaringan (SSID)</label>
+                    <input type="text" id="wifiSSID" class="form-control" placeholder="Nama WiFi">
+                </div>
+                <div class="form-group">
+                    <label for="wifiPassword">Password</label>
+                    <input type="password" id="wifiPassword" class="form-control" placeholder="Password WiFi">
+                </div>
+                <div class="form-group">
+                    <label for="wifiType">Tipe Keamanan</label>
+                    <select id="wifiType" class="form-control">
+                        <option value="WPA">WPA/WPA2</option>
+                        <option value="WEP">WEP</option>
+                        <option value="nopass">Tanpa Password</option>
+                    </select>
+                </div>
+                <button id="generateQRWifi" class="btn btn-block">Buat QR Code</button>
+                <div id="qrWifiResult" class="result-container" style="display: none; text-align: center;">
+                    <img id="qrWifiImage" src="" alt="QR Code">
+                    <p>QR Code berhasil dibuat!</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="contact-tab">
+                <div class="form-group">
+                    <label for="contactName">Nama</label>
+                    <input type="text" id="contactName" class="form-control" placeholder="Nama kontak">
+                </div>
+                <div class="form-group">
+                    <label for="contactPhone">Nomor Telepon</label>
+                    <input type="tel" id="contactPhone" class="form-control" placeholder="+628123456789">
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email</label>
+                    <input type="email" id="contactEmail" class="form-control" placeholder="email@example.com">
+                </div>
+                <button id="generateQRContact" class="btn btn-block">Buat QR Code</button>
+                <div id="qrContactResult" class="result-container" style="display: none; text-align: center;">
+                    <img id="qrContactImage" src="" alt="QR Code">
+                    <p>QR Code berhasil dibuat!</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Audio Element (hidden) -->
-    <audio id="matrixAudio" loop>
-        <source src="https://files.catbox.moe/ltj1az.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <!-- URL Shortener Modal -->
+    <div class="modal" id="shorturlModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">URL Shortener</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="longUrl">Masukkan URL Panjang</label>
+                <input type="url" id="longUrl" class="form-control" placeholder="https://example.com/very-long-url-path">
+            </div>
+            
+            <div class="form-group">
+                <label for="customAlias">Alias Kustom (Opsional)</label>
+                <input type="text" id="customAlias" class="form-control" placeholder="nama-kustom">
+            </div>
+            
+            <button id="shortenUrl" class="btn btn-block">Perpendek URL</button>
+            
+            <div id="shortUrlResult" class="result-container" style="display: none;">
+                <p>URL Pendek:</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="shortUrlOutput" class="form-control" readonly>
+                    <button id="copyShortUrl" class="btn">Salin</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Text Encoder Modal -->
+    <div class="modal" id="encodeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Text Encoder</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="encode">Enkripsi</button>
+                <button class="tab-btn" data-tab="decode">Dekripsi</button>
+            </div>
+            
+            <div class="tab-content active" id="encode-tab">
+                <div class="form-group">
+                    <label for="plainText">Teks Asli</label>
+                    <textarea id="plainText" class="form-control" rows="4" placeholder="Masukkan teks yang ingin dienkripsi"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="encodeMethod">Metode Enkripsi</label>
+                    <select id="encodeMethod" class="form-control">
+                        <option value="base64">Base64</option>
+                        <option value="rot13">ROT13</option>
+                        <option value="morse">Morse Code</option>
+                    </select>
+                </div>
+                
+                <button id="encodeText" class="btn btn-block">Enkripsi</button>
+                
+                <div id="encodedResult" class="result-container" style="display: none;">
+                    <p>Hasil Enkripsi:</p>
+                    <textarea id="encodedText" class="form-control" rows="4" readonly></textarea>
+                    <button id="copyEncoded" class="btn" style="margin-top: 10px;">Salin</button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="decode-tab">
+                <div class="form-group">
+                    <label for="encodedInput">Teks Terenkripsi</label>
+                    <textarea id="encodedInput" class="form-control" rows="4" placeholder="Masukkan teks terenkripsi"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="decodeMethod">Metode Dekripsi</label>
+                    <select id="decodeMethod" class="form-control">
+                        <option value="base64">Base64</option>
+                        <option value="rot13">ROT13</option>
+                        <option value="morse">Morse Code</option>
+                    </select>
+                </div>
+                
+                <button id="decodeText" class="btn btn-block">Dekripsi</button>
+                
+                <div id="decodedResult" class="result-container" style="display: none;">
+                    <p>Hasil Dekripsi:</p>
+                    <textarea id="decodedText" class="form-control" rows="4" readonly></textarea>
+                    <button id="copyDecoded" class="btn" style="margin-top: 10px;">Salin</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scam Link Checker Modal -->
+    <div class="modal" id="scamcheckModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Cek Link Penipuan</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="scamUrl">Masukkan URL untuk Diperiksa</label>
+                <input type="url" id="scamUrl" class="form-control" placeholder="https://example.com">
+            </div>
+            
+            <button id="checkScam" class="btn btn-block">Periksa Keamanan</button>
+            
+            <div id="scamResult" class="result-container" style="display: none;">
+                <!-- Result will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Secure Notes Modal -->
+    <div class="modal" id="notesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Catatan Online Aman</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="noteTitle">Judul Catatan</label>
+                <input type="text" id="noteTitle" class="form-control" placeholder="Judul catatan">
+            </div>
+            
+            <div class="form-group">
+                <label for="noteContent">Isi Catatan</label>
+                <textarea id="noteContent" class="form-control" rows="8" placeholder="Tulis catatan Anda di sini..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="notePassword">Password (Opsional)</label>
+                <input type="password" id="notePassword" class="form-control" placeholder="Password untuk enkripsi catatan">
+            </div>
+            
+            <button id="saveNote" class="btn btn-block">Simpan Catatan</button>
+            
+            <div id="notesList" style="margin-top: 20px;">
+                <h3>Catatan Tersimpan</h3>
+                <div id="notesListContainer">
+                    <!-- Notes will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scammer Database Modal -->
+    <div class="modal" id="scammerdbModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Database Nomor Penipu</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="scammerNumber">Masukkan Nomor Telepon</label>
+                <input type="tel" id="scammerNumber" class="form-control" placeholder="08123456789">
+            </div>
+            
+            <button id="checkScammer" class="btn btn-block">Cek Nomor</button>
+            
+            <div id="scammerResult" class="result-container" style="display: none;">
+                <!-- Result will be populated by JavaScript -->
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <h3>Laporkan Nomor Penipu</h3>
+                <div class="form-group">
+                    <label for="reportNumber">Nomor yang Dilaporkan</label>
+                    <input type="tel" id="reportNumber" class="form-control" placeholder="08123456789">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reportType">Jenis Penipuan</label>
+                    <select id="reportType" class="form-control">
+                        <option value="sms">SMS Penipuan</option>
+                        <option value="telepon">Telepon Penipuan</option>
+                        <option value="whatsapp">WhatsApp Penipuan</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reportDescription">Deskripsi Kejadian</label>
+                    <textarea id="reportDescription" class="form-control" rows="4" placeholder="Jelaskan kronologi penipuan..."></textarea>
+                </div>
+                
+                <button id="submitReport" class="btn btn-block">Kirim Laporan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal" id="forgotPasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Reset Password</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            
+            <p>Masukkan email Anda untuk menerima link reset password</p>
+            
+            <div class="form-group">
+                <label for="resetEmail">Email</label>
+                <input type="email" id="resetEmail" class="form-control" placeholder="nama@email.com">
+            </div>
+            
+            <button id="sendResetEmail" class="btn btn-block">Kirim Email Reset</button>
+            
+            <div id="resetEmailResult" class="result-container" style="display: none;">
+                <!-- Result will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
     <script>
-        // Matrix Animation
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6n84tg31VGPE2Z97N17fPL3Ye-TzeC3Q",
+            authDomain: "otp-verivikasi.firebaseapp.com",
+            projectId: "otp-verivikasi",
+            storageBucket: "otp-verivikasi.firebasestorage.app",
+            messagingSenderId: "1098628902772",
+            appId: "1:1098628902772:web:ec6ea774d1f7c7b0308621"
+        };
         
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
         
-        const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
-        const fontSize = 16;
-        const columns = Math.floor(canvas.width / fontSize);
+        // DOM Elements
+        const loginSection = document.getElementById('loginSection');
+        const mainContent = document.getElementById('mainContent');
+        const loginBtn = document.getElementById('loginBtn');
+        const userInfo = document.getElementById('userInfo');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        const googleSignInBtn = document.getElementById('googleSignInBtn');
+        const loginForm = document.getElementById('loginForm');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+        const sendResetEmailBtn = document.getElementById('sendResetEmail');
+        const resetEmailResult = document.getElementById('resetEmailResult');
+        const notification = document.getElementById('notification');
         
-        const drops = [];
-        for (let i = 0; i < columns; i++) {
-            drops[i] = Math.floor(Math.random() * -100);
+        // Check if user is logged in
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                showMainContent(user);
+            } else {
+                showLoginSection();
+            }
+        });
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
         
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Show login section
+        function showLoginSection() {
+            loginSection.style.display = 'flex';
+            mainContent.style.display = 'none';
+            loginBtn.style.display = 'block';
+            userInfo.style.display = 'none';
+        }
+        
+        // Show main content
+        function showMainContent(user) {
+            loginSection.style.display = 'none';
+            mainContent.style.display = 'block';
+            loginBtn.style.display = 'none';
+            userInfo.style.display = 'flex';
             
-            ctx.fillStyle = '#0f0';
-            ctx.font = fontSize + 'px monospace';
+            // Set user info
+            userName.textContent = user.displayName || user.email;
+            const initial = (user.displayName && user.displayName.charAt(0)) || user.email.charAt(0);
+            userAvatar.textContent = initial.toUpperCase();
+        }
+        
+        // Google Sign In
+        googleSignInBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    showNotification('Login berhasil!', 'success');
+                    showMainContent(result.user);
+                })
+                .catch(error => {
+                    showNotification(`Error: ${error.message}`, 'error');
+                });
+        });
+        
+        // Email/Password Sign In
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
             
-            for (let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            auth.signInWithEmailAndPassword(email, password)
+                .then(result => {
+                    showNotification('Login berhasil!', 'success');
+                    showMainContent(result.user);
+                })
+                .catch(error => {
+                    showNotification(`Error: ${error.message}`, 'error');
+                });
+        });
+        
+        // Forgot Password
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            forgotPasswordModal.style.display = 'flex';
+        });
+        
+        sendResetEmailBtn.addEventListener('click', () => {
+            const email = document.getElementById('resetEmail').value;
+            
+            if (!email) {
+                showNotification('Masukkan email Anda', 'warning');
+                return;
+            }
+            
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    resetEmailResult.style.display = 'block';
+                    resetEmailResult.innerHTML = `
+                        <p>Email reset password telah dikirim ke ${email}</p>
+                        <p>Jika Anda tidak menerima email dalam beberapa menit, periksa folder spam Anda.</p>
+                    `;
+                    showNotification('Email reset password telah dikirim', 'success');
+                })
+                .catch(error => {
+                    showNotification(`Error: ${error.message}`, 'error');
+                });
+        });
+        
+        // Logout
+        loginBtn.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    showNotification('Anda telah keluar', 'info');
+                    showLoginSection();
+                })
+                .catch(error => {
+                    showNotification(`Error: ${error.message}`, 'error');
+                });
+        });
+        
+        // Tool Cards
+        const toolCards = document.querySelectorAll('.tool-card');
+        toolCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const tool = card.getAttribute('data-tool');
+                openToolModal(tool);
+            });
+        });
+        
+        // Open Tool Modal
+        function openToolModal(tool) {
+            const modalId = `${tool}Modal`;
+            const modal = document.getElementById(modalId);
+            
+            if (modal) {
+                modal.style.display = 'flex';
                 
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
+                // Initialize tool-specific functionality
+                if (tool === 'qr') {
+                    initQRCodeTool();
+                } else if (tool === 'shorturl') {
+                    initShortURLTool();
+                } else if (tool === 'encode') {
+                    initEncoderTool();
+                } else if (tool === 'scamcheck') {
+                    initScamCheckTool();
+                } else if (tool === 'notes') {
+                    initNotesTool();
+                } else if (tool === 'scammerdb') {
+                    initScammerDBTool();
+                }
+            }
+        }
+        
+        // Close Modal
+        document.querySelectorAll('.close-modal').forEach(closeBtn => {
+            closeBtn.addEventListener('click', () => {
+                closeBtn.closest('.modal').style.display = 'none';
+            });
+        });
+        
+        // QR Code Tool
+        function initQRCodeTool() {
+            const generateQRBtn = document.getElementById('generateQR');
+            const generateQRUrlBtn = document.getElementById('generateQRUrl');
+            const generateQRWifiBtn = document.getElementById('generateQRWifi');
+            const generateQRContactBtn = document.getElementById('generateQRContact');
+            
+            // Tab switching
+            document.querySelectorAll('#qrModal .tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabName = btn.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    document.querySelectorAll('#qrModal .tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Show corresponding tab content
+                    document.querySelectorAll('#qrModal .tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                });
+            });
+            
+            // Generate QR Code for text
+            generateQRBtn.addEventListener('click', () => {
+                const text = document.getElementById('qrText').value;
+                if (!text) {
+                    showNotification('Masukkan teks terlebih dahulu', 'warning');
+                    return;
                 }
                 
-                drops[i]++;
-            }
+                // Generate QR Code using API
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}`;
+                document.getElementById('qrImage').src = qrCodeUrl;
+                document.getElementById('qrResult').style.display = 'block';
+            });
+            
+            // Generate QR Code for URL
+            generateQRUrlBtn.addEventListener('click', () => {
+                const url = document.getElementById('qrUrl').value;
+                if (!url) {
+                    showNotification('Masukkan URL terlebih dahulu', 'warning');
+                    return;
+                }
+                
+                // Generate QR Code using API
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+                document.getElementById('qrUrlImage').src = qrCodeUrl;
+                document.getElementById('qrUrlResult').style.display = 'block';
+            });
+            
+            // Generate QR Code for WiFi
+            generateQRWifiBtn.addEventListener('click', () => {
+                const ssid = document.getElementById('wifiSSID').value;
+                const password = document.getElementById('wifiPassword').value;
+                const type = document.getElementById('wifiType').value;
+                
+                if (!ssid) {
+                    showNotification('Masukkan nama jaringan WiFi', 'warning');
+                    return;
+                }
+                
+                // Format WiFi connection string
+                let wifiString = `WIFI:T:${type};S:${ssid};`;
+                if (password && type !== 'nopass') {
+                    wifiString += `P:${password};`;
+                }
+                wifiString += ';';
+                
+                // Generate QR Code using API
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(wifiString)}`;
+                document.getElementById('qrWifiImage').src = qrCodeUrl;
+                document.getElementById('qrWifiResult').style.display = 'block';
+            });
+            
+            // Generate QR Code for Contact
+            generateQRContactBtn.addEventListener('click', () => {
+                const name = document.getElementById('contactName').value;
+                const phone = document.getElementById('contactPhone').value;
+                const email = document.getElementById('contactEmail').value;
+                
+                if (!name && !phone && !email) {
+                    showNotification('Masukkan setidaknya satu informasi kontak', 'warning');
+                    return;
+                }
+                
+                // Format vCard
+                let vCard = 'BEGIN:VCARD\nVERSION:3.0\n';
+                if (name) vCard += `FN:${name}\n`;
+                if (phone) vCard += `TEL:${phone}\n`;
+                if (email) vCard += `EMAIL:${email}\n`;
+                vCard += 'END:VCARD';
+                
+                // Generate QR Code using API
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(vCard)}`;
+                document.getElementById('qrContactImage').src = qrCodeUrl;
+                document.getElementById('qrContactResult').style.display = 'block';
+            });
         }
         
-        setInterval(draw, 33);
-        
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        // Splash Screen and Music
-        const splash = document.getElementById('splash');
-        const enterBtn = document.getElementById('enterBtn');
-        const matrixAudio = document.getElementById('matrixAudio');
-
-        // Function to handle audio play
-        function playAudio() {
-            matrixAudio.volume = 0.5; // Set volume to 50%
-            const playPromise = matrixAudio.play();
+        // Short URL Tool
+        function initShortURLTool() {
+            const shortenUrlBtn = document.getElementById('shortenUrl');
+            const copyShortUrlBtn = document.getElementById('copyShortUrl');
             
-            if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    // Show message if autoplay is blocked
-                    console.log("Autoplay was prevented. Please click the button to play audio.");
+            shortenUrlBtn.addEventListener('click', () => {
+                const longUrl = document.getElementById('longUrl').value;
+                const customAlias = document.getElementById('customAlias').value;
+                
+                if (!longUrl) {
+                    showNotification('Masukkan URL yang ingin dipendekkan', 'warning');
+                    return;
+                }
+                
+                // Simulate URL shortening (in a real app, this would call an API)
+                const shortUrl = customAlias 
+                    ? `https://short.id/${customAlias}` 
+                    : `https://short.id/${Math.random().toString(36).substring(2, 8)}`;
+                
+                document.getElementById('shortUrlOutput').value = shortUrl;
+                document.getElementById('shortUrlResult').style.display = 'block';
+            });
+            
+            copyShortUrlBtn.addEventListener('click', () => {
+                const shortUrl = document.getElementById('shortUrlOutput');
+                shortUrl.select();
+                document.execCommand('copy');
+                showNotification('URL berhasil disalin', 'success');
+            });
+        }
+        
+        // Text Encoder Tool
+        function initEncoderTool() {
+            const encodeTextBtn = document.getElementById('encodeText');
+            const decodeTextBtn = document.getElementById('decodeText');
+            const copyEncodedBtn = document.getElementById('copyEncoded');
+            const copyDecodedBtn = document.getElementById('copyDecoded');
+            
+            // Tab switching
+            document.querySelectorAll('#encodeModal .tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabName = btn.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    document.querySelectorAll('#encodeModal .tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Show corresponding tab content
+                    document.querySelectorAll('#encodeModal .tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
                 });
+            });
+            
+            // Encode text
+            encodeTextBtn.addEventListener('click', () => {
+                const plainText = document.getElementById('plainText').value;
+                const method = document.getElementById('encodeMethod').value;
+                
+                if (!plainText) {
+                    showNotification('Masukkan teks yang ingin dienkripsi', 'warning');
+                    return;
+                }
+                
+                let encodedText = '';
+                
+                switch (method) {
+                    case 'base64':
+                        encodedText = btoa(plainText);
+                        break;
+                    case 'rot13':
+                        encodedText = plainText.replace(/[a-zA-Z]/g, char => {
+                            const code = char.charCodeAt(0);
+                            if (code >= 65 && code <= 90) {
+                                return String.fromCharCode(((code - 65 + 13) % 26) + 65);
+                            } else if (code >= 97 && code <= 122) {
+                                return String.fromCharCode(((code - 97 + 13) % 26) + 97);
+                            }
+                            return char;
+                        });
+                        break;
+                    case 'morse':
+                        const morseCode = {
+                            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+                            'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+                            'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+                            'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+                            'Y': '-.--', 'Z': '--..', '0': '-----', '1': '.----', '2': '..---',
+                            '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...',
+                            '8': '---..', '9': '----.', ' ': '/'
+                        };
+                        encodedText = plainText.toUpperCase().split('').map(char => morseCode[char] || char).join(' ');
+                        break;
+                }
+                
+                document.getElementById('encodedText').value = encodedText;
+                document.getElementById('encodedResult').style.display = 'block';
+            });
+            
+            // Decode text
+            decodeTextBtn.addEventListener('click', () => {
+                const encodedInput = document.getElementById('encodedInput').value;
+                const method = document.getElementById('decodeMethod').value;
+                
+                if (!encodedInput) {
+                    showNotification('Masukkan teks terenkripsi', 'warning');
+                    return;
+                }
+                
+                let decodedText = '';
+                
+                try {
+                    switch (method) {
+                        case 'base64':
+                            decodedText = atob(encodedInput);
+                            break;
+                        case 'rot13':
+                            decodedText = encodedInput.replace(/[a-zA-Z]/g, char => {
+                                const code = char.charCodeAt(0);
+                                if (code >= 65 && code <= 90) {
+                                    return String.fromCharCode(((code - 65 + 13) % 26) + 65);
+                                } else if (code >= 97 && code <= 122) {
+                                    return String.fromCharCode(((code - 97 + 13) % 26) + 97);
+                                }
+                                return char;
+                            });
+                            break;
+                        case 'morse':
+                            const morseToText = {
+                                '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E', '..-.': 'F',
+                                '--.': 'G', '....': 'H', '..': 'I', '.---': 'J', '-.-': 'K', '.-..': 'L',
+                                '--': 'M', '-.': 'N', '---': 'O', '.--.': 'P', '--.-': 'Q', '.-.': 'R',
+                                '...': 'S', '-': 'T', '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X',
+                                '-.--': 'Y', '--..': 'Z', '-----': '0', '.----': '1', '..---': '2',
+                                '...--': '3', '....-': '4', '.....': '5', '-....': '6', '--...': '7',
+                                '---..': '8', '----.': '9', '/': ' '
+                            };
+                            decodedText = encodedInput.split(' ').map(code => morseToText[code] || code).join('');
+                            break;
+                    }
+                    
+                    document.getElementById('decodedText').value = decodedText;
+                    document.getElementById('decodedResult').style.display = 'block';
+                } catch (error) {
+                    showNotification('Gagal mendekripsi teks. Pastikan metode dekripsi sesuai dengan metode enkripsi.', 'error');
+                }
+            });
+            
+            // Copy buttons
+            copyEncodedBtn.addEventListener('click', () => {
+                const encodedText = document.getElementById('encodedText');
+                encodedText.select();
+                document.execCommand('copy');
+                showNotification('Teks terenkripsi berhasil disalin', 'success');
+            });
+            
+            copyDecodedBtn.addEventListener('click', () => {
+                const decodedText = document.getElementById('decodedText');
+                decodedText.select();
+                document.execCommand('copy');
+                showNotification('Teks terdekripsi berhasil disalin', 'success');
+            });
+        }
+        
+        // Scam Check Tool
+        function initScamCheckTool() {
+            const checkScamBtn = document.getElementById('checkScam');
+            
+            checkScamBtn.addEventListener('click', () => {
+                const url = document.getElementById('scamUrl').value;
+                
+                if (!url) {
+                    showNotification('Masukkan URL yang ingin diperiksa', 'warning');
+                    return;
+                }
+                
+                // Simulate scam checking (in a real app, this would call an API)
+                const isScam = Math.random() > 0.7; // 30% chance of being a scam for demo
+                
+                const scamResult = document.getElementById('scamResult');
+                scamResult.style.display = 'block';
+                
+                if (isScam) {
+                    scamResult.innerHTML = `
+                        <div style="color: var(--danger);">
+                            <h3><i class="fas fa-exclamation-triangle"></i> PERINGATAN: Link Terindikasi Berbahaya!</h3>
+                            <p>Link ini terindikasi sebagai penipuan atau phishing. Berikut adalah alasan kami menandainya berbahaya:</p>
+                            <ul>
+                                <li>Domain terdaftar baru-baru ini</li>
+                                <li>Menggunakan teknik manipulasi URL</li>
+                                <li>Terdapat laporan penipuan sebelumnya</li>
+                            </ul>
+                            <p><strong>Kami sangat menyarankan untuk tidak mengunjungi link ini.</strong></p>
+                        </div>
+                    `;
+                } else {
+                    scamResult.innerHTML = `
+                        <div style="color: var(--success);">
+                            <h3><i class="fas fa-check-circle"></i> Link Aman</h3>
+                            <p>Berdasarkan pemeriksaan kami, link ini tampaknya aman untuk dikunjungi.</p>
+                            <p>Namun, tetap waspada terhadap informasi pribadi yang Anda bagikan di situs web manapun.</p>
+                        </div>
+                    `;
+                }
+            });
+        }
+        
+        // Notes Tool
+        function initNotesTool() {
+            const saveNoteBtn = document.getElementById('saveNote');
+            const notesListContainer = document.getElementById('notesListContainer');
+            
+            // Load saved notes
+            loadNotes();
+            
+            saveNoteBtn.addEventListener('click', () => {
+                const title = document.getElementById('noteTitle').value;
+                const content = document.getElementById('noteContent').value;
+                const password = document.getElementById('notePassword').value;
+                
+                if (!title || !content) {
+                    showNotification('Judul dan isi catatan harus diisi', 'warning');
+                    return;
+                }
+                
+                // Get current user
+                const user = auth.currentUser;
+                if (!user) {
+                    showNotification('Anda harus login untuk menyimpan catatan', 'error');
+                    return;
+                }
+                
+                // Create note object
+                const note = {
+                    title,
+                    content,
+                    password: password ? btoa(password) : null, // Simple encoding for demo
+                    timestamp: new Date().toISOString(),
+                    userId: user.uid
+                };
+                
+                // Save to Firebase
+                const newNoteRef = database.ref('notes').push();
+                newNoteRef.set(note)
+                    .then(() => {
+                        showNotification('Catatan berhasil disimpan', 'success');
+                        
+                        // Clear form
+                        document.getElementById('noteTitle').value = '';
+                        document.getElementById('noteContent').value = '';
+                        document.getElementById('notePassword').value = '';
+                        
+                        // Reload notes
+                        loadNotes();
+                    })
+                    .catch(error => {
+                        showNotification(`Error: ${error.message}`, 'error');
+                    });
+            });
+            
+            function loadNotes() {
+                const user = auth.currentUser;
+                if (!user) return;
+                
+                database.ref('notes').orderByChild('userId').equalTo(user.uid).once('value')
+                    .then(snapshot => {
+                        notesListContainer.innerHTML = '';
+                        
+                        if (!snapshot.exists()) {
+                            notesListContainer.innerHTML = '<p>Belum ada catatan tersimpan</p>';
+                            return;
+                        }
+                        
+                        snapshot.forEach(childSnapshot => {
+                            const note = childSnapshot.val();
+                            const noteId = childSnapshot.key;
+                            
+                            const noteElement = document.createElement('div');
+                            noteElement.className = 'note-item';
+                            noteElement.style.cssText = 'padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px;';
+                            
+                            noteElement.innerHTML = `
+                                <h4>${note.title}</h4>
+                                <p>${note.content.substring(0, 100)}${note.content.length > 100 ? '...' : ''}</p>
+                                <small>${new Date(note.timestamp).toLocaleString()}</small>
+                                ${note.password ? '<i class="fas fa-lock" style="margin-left: 10px;"></i>' : ''}
+                                <button class="btn" style="float: right; padding: 5px 10px;" data-note-id="${noteId}">Lihat</button>
+                            `;
+                            
+                            notesListContainer.appendChild(noteElement);
+                        });
+                        
+                        // Add click event to view buttons
+                        document.querySelectorAll('[data-note-id]').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                const noteId = e.target.getAttribute('data-note-id');
+                                viewNote(noteId);
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        showNotification(`Error: ${error.message}`, 'error');
+                    });
+            }
+            
+            function viewNote(noteId) {
+                database.ref('notes').child(noteId).once('value')
+                    .then(snapshot => {
+                        const note = snapshot.val();
+                        
+                        if (note.password) {
+                            const password = prompt('Catatan ini dilindungi password. Masukkan password:');
+                            if (!password) return;
+                            
+                            try {
+                                if (btoa(password) !== note.password) {
+                                    showNotification('Password salah', 'error');
+                                    return;
+                                }
+                            } catch (error) {
+                                showNotification('Error: ' + error.message, 'error');
+                                return;
+                            }
+                        }
+                        
+                        // Display note in modal or alert
+                        alert(`Judul: ${note.title}\n\nIsi: ${note.content}\n\nDibuat: ${new Date(note.timestamp).toLocaleString()}`);
+                    })
+                    .catch(error => {
+                        showNotification(`Error: ${error.message}`, 'error');
+                    });
             }
         }
-
-        // Enter button click handler
-        enterBtn.addEventListener('click', function() {
-            // Start playing audio first
-            playAudio();
+        
+        // Scammer Database Tool
+        function initScammerDBTool() {
+            const checkScammerBtn = document.getElementById('checkScammer');
+            const submitReportBtn = document.getElementById('submitReport');
             
-            // Then hide the splash screen
-            splash.style.opacity = '0';
-            setTimeout(() => {
-                splash.style.display = 'none';
-            }, 1000);
+            checkScammerBtn.addEventListener('click', () => {
+                const number = document.getElementById('scammerNumber').value;
+                
+                if (!number) {
+                    showNotification('Masukkan nomor telepon yang ingin diperiksa', 'warning');
+                    return;
+                }
+                
+                // Normalize the number (remove non-digits, add country code if needed)
+                const normalizedNumber = number.replace(/\D/g, '');
+                
+                // Check if number exists in database
+                database.ref('scammers').child(normalizedNumber).once('value')
+                    .then(snapshot => {
+                        const scammerResult = document.getElementById('scammerResult');
+                        scammerResult.style.display = 'block';
+                        
+                        if (snapshot.exists()) {
+                            const data = snapshot.val();
+                            scammerResult.innerHTML = `
+                                <div style="color: var(--danger);">
+                                    <h3><i class="fas fa-exclamation-triangle"></i> Nomor Terindikasi Penipuan</h3>
+                                    <p>Nomor ${number} terdaftar dalam database kami sebagai nomor penipu.</p>
+                                    <p><strong>Jenis Penipuan:</strong> ${data.type}</p>
+                                    <p><strong>Jumlah Laporan:</strong> ${data.reportCount || 1}</p>
+                                    <p><strong>Deskripsi:</strong> ${data.description || 'Tidak ada deskripsi'}</p>
+                                    <p><strong>Terakhir Dilaporkan:</strong> ${new Date(data.lastReport).toLocaleString()}</p>
+                                </div>
+                            `;
+                        } else {
+                            scammerResult.innerHTML = `
+                                <div style="color: var(--success);">
+                                    <h3><i class="fas fa-check-circle"></i> Nomor Aman</h3>
+                                    <p>Nomor ${number} tidak terdaftar dalam database penipuan kami.</p>
+                                    <p>Namun, tetap waspada terhadap panggilan atau pesan dari nomor tidak dikenal.</p>
+                                </div>
+                            `;
+                        }
+                    })
+                    .catch(error => {
+                        showNotification(`Error: ${error.message}`, 'error');
+                    });
+            });
+            
+            submitReportBtn.addEventListener('click', () => {
+                const number = document.getElementById('reportNumber').value;
+                const type = document.getElementById('reportType').value;
+                const description = document.getElementById('reportDescription').value;
+                
+                if (!number) {
+                    showNotification('Masukkan nomor telepon yang ingin dilaporkan', 'warning');
+                    return;
+                }
+                
+                // Normalize the number
+                const normalizedNumber = number.replace(/\D/g, '');
+                
+                // Get current user
+                const user = auth.currentUser;
+                if (!user) {
+                    showNotification('Anda harus login untuk melaporkan nomor penipu', 'error');
+                    return;
+                }
+                
+                // Check if number already exists
+                database.ref('scammers').child(normalizedNumber).once('value')
+                    .then(snapshot => {
+                        const reportData = {
+                            type,
+                            description,
+                            timestamp: new Date().toISOString(),
+                            reporterId: user.uid
+                        };
+                        
+                        if (snapshot.exists()) {
+                            // Update existing record
+                            const data = snapshot.val();
+                            const reportCount = (data.reportCount || 1) + 1;
+                            
+                            database.ref('scammers').child(normalizedNumber).update({
+                                reportCount,
+                                lastReport: reportData.timestamp,
+                                latestReport: reportData
+                            })
+                            .then(() => {
+                                showNotification('Laporan berhasil dikirim', 'success');
+                                
+                                // Clear form
+                                document.getElementById('reportNumber').value = '';
+                                document.getElementById('reportType').value = 'sms';
+                                document.getElementById('reportDescription').value = '';
+                            })
+                            .catch(error => {
+                                showNotification(`Error: ${error.message}`, 'error');
+                            });
+                        } else {
+                            // Create new record
+                            database.ref('scammers').child(normalizedNumber).set({
+                                reportCount: 1,
+                                lastReport: reportData.timestamp,
+                                latestReport: reportData,
+                                type,
+                                description
+                            })
+                            .then(() => {
+                                showNotification('Laporan berhasil dikirim', 'success');
+                                
+                                // Clear form
+                                document.getElementById('reportNumber').value = '';
+                                document.getElementById('reportType').value = 'sms';
+                                document.getElementById('reportDescription').value = '';
+                            })
+                            .catch(error => {
+                                showNotification(`Error: ${error.message}`, 'error');
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        showNotification(`Error: ${error.message}`, 'error');
+                    });
+            });
+        }
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
         });
-
-        // Try to play audio when page loads (may not work due to browser restrictions)
-        window.addEventListener('load', function() {
-            // Some browsers require user interaction before playing audio
-            // We'll rely on the button click instead
-        });
-    </script><!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/68449f93490708190e50181c/default';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
+    </script>
 </body>
 </html>
