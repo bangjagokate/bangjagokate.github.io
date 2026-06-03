@@ -28,6 +28,84 @@
             overflow-x: hidden;
         }
 
+        /* LAYAR PENUTUP UTAMA (OVERLAY) - PRESISI & RESPONSIF */
+        #gate-keeper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+            padding: 20px;
+        }
+
+        #gate-keeper.unlock {
+            transform: translateY(-100vh);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .gate-box {
+            border: 1px solid var(--cyber-red);
+            padding: 35px 20px;
+            background: #020202;
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.25);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .gate-box h2 {
+            color: var(--cyber-red);
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px var(--cyber-red);
+            letter-spacing: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .gate-box p {
+            color: #aaaaaa;
+            margin-bottom: 35px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        /* TOMBOL PRESISI TIDAK PECAH BARIS DI HP */
+        .trigger-btn {
+            display: block;
+            width: 100%;
+            padding: 14px 10px;
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            font-weight: bold;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px var(--terminal-green);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+        }
+
+        .trigger-btn:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 15px var(--terminal-green);
+        }
+
         /* Canvas untuk Animasi Matrix */
         #matrix-canvas {
             position: fixed;
@@ -81,7 +159,7 @@
         }
 
         header h1 {
-            font-size: calc(1.2rem + 1vw);
+            font-size: calc(1.1rem + 1vw);
             text-shadow: 0 0 10px var(--terminal-green);
             white-space: nowrap;
             overflow: hidden;
@@ -162,7 +240,7 @@
 
         @keyframes blinker { 50% { opacity: 0; } }
 
-        /* Aplikasi / Payload Grid - Dioptimalkan untuk 1 item terpusat */
+        /* Repository APK Section */
         .section-title {
             text-align: center;
             margin-bottom: 30px;
@@ -181,7 +259,7 @@
             border: 1px solid var(--dim-green);
             padding: 30px;
             width: 100%;
-            max-width: 500px; /* Membuat card fokus di tengah */
+            max-width: 500px;
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -255,7 +333,22 @@
 </head>
 <body>
 
+<!-- HALAMAN PENUTUP UTAMA DI AWAL -->
+<div id="gate-keeper">
+    <div class="gate-box">
+        <h2>[ SYSTEM ENCRYPTED ]</h2>
+        <p>Direktori aman milik BANG JAGO terdeteksi. Silakan inisialisasi kunci enkripsi untuk membuka gerbang utama dan memuat repositori sistem.</p>
+        <button class="trigger-btn" onclick="breakTheGate()">ACCESS MAIN SYSTEM</button>
+    </div>
+</div>
+
+<!-- Efek Latar Belakang Matrix -->
 <canvas id="matrix-canvas"></canvas>
+
+<!-- Elemen Audio dengan Tautan Baru (Fitur Loop Otomatis Mengulang Tetap Aktif) -->
+<audio id="cyber-audio" loop>
+    <source src="https://files.catbox.moe/1jky99.mp3" type="audio/mpeg">
+</audio>
 
 <div class="container">
     <header>
@@ -271,6 +364,7 @@
     </header>
 
     <main>
+        <!-- Profil Section -->
         <section class="profil-section">
             <div class="foto-container">
                 <img src="https://i.ibb.co.com/fY6WJP4z/Generated-Image-September-19-2025-6-23-PM.png" alt="Bang Jago Profile">
@@ -284,9 +378,9 @@
             </div>
         </section>
 
+        <!-- Repository APK Section -->
         <h2 class="section-title">> AVAILABLE_PAYLOADS (APK)</h2>
         <section class="aplikasi-grid">
-            
             <div class="app-card">
                 <h3>WalkieTalkie <span style="color: var(--terminal-green); font-size:0.85rem;">[ONLINE]</span></h3>
                 <p>Aplikasi komunikasi suara waktu nyata (real-time) yang dibangun secara otodidak, memanfaatkan infrastruktur awan Firebase Server untuk transfer data instan dan stabil.</p>
@@ -296,7 +390,6 @@
                 </div>
                 <a href="https://limewire.com/d/vH3KD#St5WJftWCT" target="_blank" class="download-btn">[ UNDUH_APK ]</a>
             </div>
-
         </section>
     </main>
 
@@ -307,7 +400,22 @@
 
 <script>
     /* =======================================================
-       1. SCRIPT ANIMASI MATRIX BACKGROUND
+       1. SCRIPT MEMBUKA LAYAR UTAMA & PUTAR LAGU (LOOP)
+       ======================================================= */
+    function breakTheGate() {
+        const music = document.getElementById('cyber-audio');
+        music.play().catch((error) => {
+            console.log("Audio play blocked by browser settings.", error);
+        });
+
+        const gate = document.getElementById('gate-keeper');
+        gate.classList.add('unlock');
+
+        setTimeout(typeWriterEffect, 1000);
+    }
+
+    /* =======================================================
+       2. SCRIPT ANIMASI MATRIX BACKGROUND
        ======================================================= */
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
@@ -349,7 +457,7 @@
     setInterval(drawMatrix, 33);
 
     /* =======================================================
-       2. SCRIPT EFEK MENGETIK PADA BIODATA (BERURUTAN)
+       3. SCRIPT EFEK MENGETIK PADA BIODATA (BERURUTAN)
        ======================================================= */
     const bioData = [
         { id: "type-name", prefix: "<strong>NAME:</strong> ", text: "BANG JAGO" },
@@ -381,10 +489,6 @@
             }
         }
     }
-
-    window.onload = function() {
-        typeWriterEffect();
-    };
 </script>
 
 </body>
