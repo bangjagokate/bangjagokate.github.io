@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BANG JAGO | Cyber Archive</title>
+    <style>
+        /* Tema Hacker & Neon */
+        :root {
+            --bg-color: #000000;
+            --terminal-green: #00ff41;
+            --dim-green: #003b00;
+            --cyber-red: #ff0055;
+            --card-bg: rgba(0, 10, 0, 0.85);
+            --font-hacker: 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-hacker);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--terminal-green);
+            overflow-x: hidden;
+        }
+
+        /* Canvas untuk Animasi Matrix */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.25;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header / Terminal Prompt */
+        header {
+            border: 1px solid var(--terminal-green);
+            background: var(--card-bg);
+            padding: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px var(--dim-green);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--dim-green);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .typing-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            width: 100%;
+        }
+
+        header h1 {
+            font-size: calc(1.2rem + 1vw);
+            text-shadow: 0 0 10px var(--terminal-green);
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid var(--terminal-green);
+            animation: 
+                typing 6s steps(22, end) infinite,
+                blink-caret 0.75s step-end infinite;
+            max-width: fit-content;
+        }
+
+        @keyframes typing {
+            0%, 10%, 100% { width: 0; }
+            50%, 70% { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--terminal-green); }
+        }
+
+        /* Profil / Intel Section */
+        .profil-section {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--terminal-green);
+            padding: 30px;
+            box-shadow: 0 0 15px var(--dim-green);
+        }
+
+        .foto-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .foto-container img {
+            width: 350px;
+            max-width: 100%;
+            filter: grayscale(100%) contrast(120%) brightness(90%);
+            border: 1px solid var(--terminal-green);
+            display: block;
+        }
+
+        .foto-container::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 65, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+
+        .bio {
+            width: 100%;
+        }
+
+        .bio h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--terminal-green);
+            padding-bottom: 5px;
+        }
+
+        .bio p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            min-height: 24px;
+        }
+
+        .bio-cursor::after {
+            content: "_";
+            animation: blinker 0.8s linear infinite;
+            color: var(--terminal-green);
+        }
+
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* Aplikasi / Payload Grid - Dioptimalkan untuk 1 item terpusat */
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            text-shadow: 0 0 8px var(--terminal-green);
+        }
+
+        .aplikasi-grid {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid var(--dim-green);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px; /* Membuat card fokus di tengah */
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .app-card:hover {
+            border-color: var(--terminal-green);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .app-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-card p {
+            color: #b5b5b5;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .app-meta {
+            font-size: 0.85rem;
+            color: var(--terminal-green);
+            opacity: 0.8;
+            margin-bottom: 20px;
+            border-top: 1px dashed var(--dim-green);
+            padding-top: 10px;
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .download-btn:hover {
+            background: var(--terminal-green);
+            color: #000;
+            box-shadow: 0 0 10px var(--terminal-green);
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--dim-green);
+            background: var(--card-bg);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .profil-section { flex-direction: column; align-items: center; padding: 15px; }
+            .foto-container img { width: 100%; max-width: 280px; }
+            header { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="matrix-canvas"></canvas>
+
+<div class="container">
+    <header>
+        <div class="terminal-header">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+            <span>bangjago@mainframe:~</span>
+        </div>
+        <div class="typing-wrapper">
+            <h1>[root@BANG_JAGO]:~$ </h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="profil-section">
+            <div class="foto-container">
+                <img src="https://i.ibb.co.com/fY6WJP4z/Generated-Image-September-19-2025-6-23-PM.png" alt="Bang Jago Profile">
+            </div>
+            <div class="bio">
+                <h2>> IDENTITY_INFO</h2>
+                <p id="type-name"></p>
+                <p id="type-status"></p>
+                <p id="type-mission"></p>
+                <p id="type-note"></p>
+            </div>
+        </section>
+
+        <h2 class="section-title">> AVAILABLE_PAYLOADS (APK)</h2>
+        <section class="aplikasi-grid">
+            
+            <div class="app-card">
+                <h3>WalkieTalkie <span style="color: var(--terminal-green); font-size:0.85rem;">[ONLINE]</span></h3>
+                <p>Aplikasi komunikasi suara waktu nyata (real-time) yang dibangun secara otodidak, memanfaatkan infrastruktur awan Firebase Server untuk transfer data instan dan stabil.</p>
+                <div class="app-meta">
+                    <div>SERVER: Firebase Realtime Database</div>
+                    <div>STATUS: Fully Functional (Otodidak)</div>
+                </div>
+                <a href="https://limewire.com/d/vH3KD#St5WJftWCT" target="_blank" class="download-btn">[ UNDUH_APK ]</a>
+            </div>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>bang_jago@system_override // &copy; 2026. All Connections Encrypted.</p>
+    </footer>
+</div>
+
+<script>
+    /* =======================================================
+       1. SCRIPT ANIMASI MATRIX BACKGROUND
+       ======================================================= */
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const katakana = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const alphabet = katakana.split('');
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const rainDrops = [];
+    for (let x = 0; x < columns; x++) {
+        rainDrops[x] = Math.random() * -100;
+    }
+
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#00ff41';
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < rainDrops.length; i++) {
+            const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+            const x = i * fontSize;
+            const y = rainDrops[i] * fontSize;
+            ctx.fillText(text, x, y);
+
+            if (y > canvas.height && Math.random() > 0.975) {
+                rainDrops[i] = 0;
+            }
+            rainDrops[i]++;
+        }
+    }
+    setInterval(drawMatrix, 33);
+
+    /* =======================================================
+       2. SCRIPT EFEK MENGETIK PADA BIODATA (BERURUTAN)
+       ======================================================= */
+    const bioData = [
+        { id: "type-name", prefix: "<strong>NAME:</strong> ", text: "BANG JAGO" },
+        { id: "type-status", prefix: "<strong>STATUS:</strong> ", text: "Self-Taught Web & Android Developer (Otodidak)" },
+        { id: "type-mission", prefix: "<strong>MISSION:</strong> ", text: "Melakukan reverse engineering, memodifikasi, dan merancang aplikasi Android serta platform web secara mandiri dari nol." },
+        { id: "type-note", prefix: "<strong>SYSTEM_NOTE:</strong> ", text: "Selamat datang di direktori penyimpanan berkas enkripsi (APK) buatan saya. Semua berkas di bawah ini aman untuk diunduh dan dieksekusi." }
+    ];
+
+    let currentLine = 0;
+    let currentChar = 0;
+    const typingSpeed = 25;
+
+    function typeWriterEffect() {
+        if (currentLine < bioData.length) {
+            const currentItem = bioData[currentLine];
+            const element = document.getElementById(currentItem.id);
+            
+            element.classList.add("bio-cursor");
+
+            if (currentChar < currentItem.text.length) {
+                element.innerHTML = currentItem.prefix + currentItem.text.substring(0, currentChar + 1);
+                currentChar++;
+                setTimeout(typeWriterEffect, typingSpeed);
+            } else {
+                element.classList.remove("bio-cursor");
+                currentLine++;
+                currentChar = 0;
+                setTimeout(typeWriterEffect, 200);
+            }
+        }
+    }
+
+    window.onload = function() {
+        typeWriterEffect();
+    };
+</script>
+
+</body>
+</html>
