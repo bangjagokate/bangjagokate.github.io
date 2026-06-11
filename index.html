@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BANG JAGO | Cyber Archive</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --terminal-green: #00ff41;
+            --dim-green: #003b00;
+            --cyber-red: #ff0055;
+            --card-bg: rgba(0, 10, 0, 0.90);
+            --font-hacker: 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-hacker);
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--terminal-green);
+            overflow-x: hidden;
+        }
+
+        /* LAYAR PENUTUP UTAMA (OVERLAY) */
+        #gate-keeper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+            padding: 20px;
+        }
+
+        #gate-keeper.unlock {
+            transform: translateY(-100vh);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .gate-box {
+            border: 1px solid var(--cyber-red);
+            padding: 35px 20px;
+            background: #020202;
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.25);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .gate-box h2 {
+            color: var(--cyber-red);
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px var(--cyber-red);
+            letter-spacing: 2px;
+        }
+
+        .gate-box p {
+            color: #aaaaaa;
+            margin-bottom: 35px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .trigger-btn {
+            display: block;
+            width: 100%;
+            padding: 14px 10px;
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px var(--terminal-green);
+        }
+
+        .trigger-btn:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 15px var(--terminal-green);
+        }
+
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.25;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            border: 1px solid var(--terminal-green);
+            background: var(--card-bg);
+            padding: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px var(--dim-green);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--dim-green);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        header h1 {
+            font-size: calc(1.1rem + 1vw);
+            text-shadow: 0 0 10px var(--terminal-green);
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid var(--terminal-green);
+            animation: typing 6s steps(22, end) infinite, blink-caret 0.75s step-end infinite;
+            max-width: fit-content;
+        }
+
+        @keyframes typing { 0%, 10%, 100% { width: 0; } 50%, 70% { width: 100%; } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--terminal-green); } }
+
+        .profil-section {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--terminal-green);
+            padding: 30px;
+            box-shadow: 0 0 15px var(--dim-green);
+        }
+
+        .foto-container { position: relative; flex-shrink: 0; }
+        .foto-container img {
+            width: 350px;
+            max-width: 100%;
+            filter: grayscale(100%) contrast(120%) brightness(90%);
+            border: 1px solid var(--terminal-green);
+            display: block;
+        }
+        .foto-container::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 65, 0.25) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        .bio { width: 100%; }
+        .bio h2 { font-size: 1.5rem; margin-bottom: 15px; border-bottom: 1px dashed var(--terminal-green); padding-bottom: 5px; }
+        .bio p { line-height: 1.6; margin-bottom: 15px; word-wrap: break-word; min-height: 24px; }
+        .bio-cursor::after { content: "_"; animation: blinker 0.8s linear infinite; color: var(--terminal-green); }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        .section-title { text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 0 0 8px var(--terminal-green); }
+
+        .aplikasi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid var(--dim-green);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .app-card h3 { font-size: 1.2rem; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .app-card p { color: #b5b5b5; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.5; }
+
+        .server-link-box {
+            background: #050e05;
+            border: 1px dashed #005a0f;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #88ff88;
+        }
+
+        .server-link-box:hover { background: #0a200a; border-color: var(--terminal-green); }
+
+        .app-meta {
+            font-size: 0.8rem;
+            color: var(--terminal-green);
+            opacity: 0.8;
+            margin-bottom: 15px;
+            border-top: 1px dashed var(--dim-green);
+            padding-top: 10px;
+        }
+
+        /* ─── DESAIN ANIMASI PROGRESS BAR REAL-TIME ─── */
+        .progress-container {
+            display: none; /* Sembunyi secara bawaan, muncul saat download */
+            width: 100%;
+            background-color: #050e05;
+            border: 1px solid var(--dim-green);
+            padding: 4px;
+            margin-bottom: 15px;
+            border-radius: 2px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            width: 0%; /* Diatur dinamis oleh JS */
+            background-color: var(--terminal-green);
+            box-shadow: 0 0 10px var(--terminal-green);
+            transition: width 0.1s linear;
+        }
+
+        .progress-status {
+            font-size: 0.75rem;
+            color: var(--terminal-green);
+            margin-bottom: 5px;
+            text-align: center;
+            text-shadow: 0 0 3px var(--terminal-green);
+        }
+
+        .secure-download-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .secure-download-btn:hover:not(:disabled) { background: var(--terminal-green); color: #000; box-shadow: 0 0 10px var(--terminal-green); }
+        .secure-download-btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+
+        #toast-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--terminal-green);
+            color: #000;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            z-index: 10000;
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 15px var(--terminal-green);
+        }
+        #toast-notification.show { transform: translateX(-50%) translateY(0); }
+
+        footer { text-align: center; padding: 30px 0; border-top: 1px solid var(--dim-green); background: var(--card-bg); font-size: 0.8rem; }
+        @media (max-width: 768px) { .profil-section { flex-direction: column; align-items: center; } .foto-container img { width: 100%; max-width: 280px; } }
+    </style>
+</head>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+
+<div id="toast-notification">LINK SERVER COPIED!</div>
+
+<div id="gate-keeper">
+    <div class="gate-box">
+        <h2>[ SYSTEM ENCRYPTED ]</h2>
+        <p>Direktori aman milik BANG JAGO terdeteksi. Silakan inisialisasi kunci enkripsi untuk membuka gerbang utama dan memuat repositori sistem berkas berkriptografi.</p>
+        <button class="trigger-btn" onclick="breakTheGate()">ACCESS MAIN SYSTEM</button>
+    </div>
+</div>
+
+<canvas id="matrix-canvas"></canvas>
+
+<audio id="cyber-audio" loop>
+    <source src="https://files.catbox.moe/1jky99.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+    <header>
+        <div class="terminal-header">
+            <span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span>
+            <span>bangjago@mainframe:~</span>
+        </div>
+        <div class="typing-wrapper"><h1>[root@BANG_JAGO]:~$ </h1></div>
+    </header>
+
+    <main>
+        <section class="profil-section">
+            <div class="foto-container">
+                <img src="https://i.ibb.co.com/fY6WJP4z/Generated-Image-September-19-2025-6-23-PM.png" alt="Bang Jago Profile">
+            </div>
+            <div class="bio">
+                <h2>> IDENTITY_INFO</h2>
+                <p id="type-name"></p><p id="type-status"></p><p id="type-mission"></p><p id="type-note"></p>
+            </div>
+        </section>
+
+        <h2 class="section-title">> AVAILABLE_PAYLOADS (APK)</h2>
+        <section class="aplikasi-grid">
+            
+            <div class="app-card">
+                <div>
+                    <h3>WalkieTalkie <span style="color: var(--terminal-green); font-size:0.8rem;">[FB_EDITION]</span></h3>
+                    <p>Aplikasi komunikasi suara waktu nyata (real-time) yang dibangun secara otodidak, memanfaatkan infrastruktur awan Firebase Server untuk transfer data instan.</p>
+                </div>
+                <div>
+                    <div class="app-meta"><div>SERVER: Firebase Cloud</div><div>TYPE: Voice Protocol</div></div>
+                    
+                    <div class="progress-container" id="p-container-fb">
+                        <div class="progress-status" id="p-status-fb">PREPARING...</div>
+                        <div class="progress-bar" id="p-bar-fb"></div>
+                    </div>
+                    
+                    <button class="secure-download-btn" id="btn-fb" onclick="secureDownload(0, 'WalkieTalkie_FB.apk', 'btn-fb', 'p-container-fb', 'p-bar-fb', 'p-status-fb')">[ DOWNLOAD APK ]</button>
+                </div>
+            </div>
+
+            <div class="app-card">
+                <div>
+                    <h3>WalkieTalkie <span style="color: #00d2ff; font-size:0.8rem;">[SS_EDITION]</span></h3>
+                    <p>Aplikasi variasi WalkieTalkie yang dirancang menggunakan basis data dan arsitektur pengolahan Google Spreadsheets Server.</p>
+                    <div class="server-link-box" onclick="copyServerLink('server-url-1')">
+                        <strong>[TAP TO COPY SERVER URL]</strong><br><span id="server-url-1">https://script.google.com/macros/s/AKfycbwBh8DsLG21j9p3Z7fkc2azX6srjendTVcjCafpyG7z8ZMiUHf0NTCx-tt9iylKxUyRVA/exec</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="app-meta"><div>SERVER: Spreadsheets</div><div>NOTE: Input di tab server</div></div>
+                    
+                    <div class="progress-container" id="p-container-ss">
+                        <div class="progress-status" id="p-status-ss">PREPARING...</div>
+                        <div class="progress-bar" id="p-bar-ss"></div>
+                    </div>
+                    
+                    <button class="secure-download-btn" id="btn-ss" onclick="secureDownload(1, 'WalkieTalkie_SS.apk', 'btn-ss', 'p-container-ss', 'p-bar-ss', 'p-status-ss')">[ DOWNLOAD APK ]</button>
+                </div>
+            </div>
+
+            <div class="app-card">
+                <div>
+                    <h3>Chating Global <span style="color: #ffbd2e; font-size:0.8rem;">[SS_EDITION]</span></h3>
+                    <p>Mendukung chatting room global, chatting privat perorangan, transmisi teks, pesan suara (voice), serta pengiriman lokasi waktu nyata via Spreadsheet.</p>
+                    <div class="server-link-box" onclick="copyServerLink('server-url-2')">
+                        <strong>[TAP TO COPY SERVER URL]</strong><br><span id="server-url-2">https://script.google.com/macros/s/AKfycbz8-iboQCS-5xfYK15uOv8IfP0nZKD8Hm8ceNbb2Edlk4BURB-VinVa7Q5bq75jXis/exec</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="app-meta"><div>SERVER: Spreadsheets</div><div>NOTE: Input di pengaturan</div></div>
+                    
+                    <div class="progress-container" id="p-container-cg">
+                        <div class="progress-status" id="p-status-cg">PREPARING...</div>
+                        <div class="progress-bar" id="p-bar-cg"></div>
+                    </div>
+                    
+                    <button class="secure-download-btn" id="btn-cg" onclick="secureDownload(2, 'ChatingGlobal.apk', 'btn-cg', 'p-container-cg', 'p-bar-cg', 'p-status-cg')">[ DOWNLOAD APK ]</button>
+                </div>
+            </div>
+
+            <div class="app-card">
+                <div>
+                    <h3>Chatio <span style="color: var(--cyber-red); font-size:0.8rem;">[SOCKET_EDITION]</span></h3>
+                    <p>Aplikasi chatting mutakhir berbasis arsitektur Socket instan. Dilengkapi fitur linimasa status yang interaktif serta penambahan teman menggunakan PIN kustom layaknya BBM.</p>
+                </div>
+                <div>
+                    <div class="app-meta"><div>ENGINE: WebSockets</div><div>FEATURES: Status Comm & PIN System</div></div>
+                    
+                    <div class="progress-container" id="p-container-co">
+                        <div class="progress-status" id="p-status-co">PREPARING...</div>
+                        <div class="progress-bar" id="p-bar-co"></div>
+                    </div>
+                    
+                    <button class="secure-download-btn" id="btn-co" onclick="secureDownload(3, 'Chatio_Socket.apk', 'btn-co', 'p-container-co', 'p-bar-co', 'p-status-co')">[ DOWNLOAD APK ]</button>
+                </div>
+            </div>
+
+            <div class="app-card">
+                <div>
+                    <h3>Bang Jago Cloud <span style="color: #ff00ff; font-size:0.8rem;">[CLOUD_EDITION]</span></h3>
+                    <p>Platform utilitas penyimpanan mandiri canggih untuk mengunggah, menyimpan, dan membagikan segala jenis file secara gratis tanpa batas ruang.</p>
+                </div>
+                <div>
+                    <div class="app-meta"><div>SERVER: Catbox Secure Storage</div><div>TYPE: Secure File Vault</div></div>
+                    
+                    <div class="progress-container" id="p-container-bjc">
+                        <div class="progress-status" id="p-status-bjc">PREPARING...</div>
+                        <div class="progress-bar" id="p-bar-bjc"></div>
+                    </div>
+                    
+                    <button class="secure-download-btn" id="btn-bjc" onclick="secureDownload(4, 'BangJago_Cloud.apk', 'btn-bjc', 'p-container-bjc', 'p-bar-bjc', 'p-status-bjc')">[ DOWNLOAD APK ]</button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer><p>bang_jago@system_override // &copy; 2026. All Connections Encrypted.</p></footer>
+</div>
+
+<script>
+    /* =======================================================
+       DEKRIPSI LINK LINK SECURE OBFLUSCATED BASE64
+       ======================================================= */
+    const _0xPayloads = [
+        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL3NiMHF6NS5hcGs=", // FB WalkieTalkie
+        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLzB5aDBqZS5hcGs=", // SS WalkieTalkie
+        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLY2R3Z3ouYXBr", // Chating Global
+        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLzIzNndkZy5hcGs=", // Chatio
+        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL3Z5NGdrNS5hcGs="  // Bang Jago Cloud (UPDATED)
+    ];
+
+    function secureDownload(index, fileName, buttonId, containerId, barId, statusId) {
+        const button = document.getElementById(buttonId);
+        const container = document.getElementById(containerId);
+        const bar = document.getElementById(barId);
+        const status = document.getElementById(statusId);
+        
+        button.disabled = true;
+        button.innerText = "CONNECTING...";
+        
+        // Memunculkan Bar Animasi Unduhan
+        container.style.display = "block";
+        bar.style.width = "0%";
+        status.innerText = "INITIALIZING CONNECT...";
+
+        const targetUrl = atob(_0xPayloads[index]);
+
+        fetch(targetUrl)
+            .then(response => {
+                if (!response.ok) throw new Error("Network error");
+                const contentLength = response.headers.get('content-length');
+                
+                if (!contentLength) {
+                    status.innerText = "DOWNLOADING (STREAMING)...";
+                    bar.style.width = "50%"; // Bar default jika size tidak terbaca server
+                    return response.blob();
+                }
+                
+                const total = parseInt(contentLength, 10);
+                let loaded = 0;
+                
+                return new Response(new ReadableStream({
+                    start(controller) {
+                        const reader = response.body.getReader();
+                        function read() {
+                            reader.read().then(({ done, value }) => {
+                                if (done) { controller.close(); return; }
+                                loaded += value.byteLength;
+                                
+                                // KALKULASI PERSEN REAL-TIME UNTUK PROGESS BAR ANIMASI
+                                const pct = Math.round((loaded / total) * 100);
+                                bar.style.width = pct + "%";
+                                status.innerText = `DOWNLOADING... ${pct}%`;
+                                
+                                controller.enqueue(value);
+                                read();
+                            }).catch(err => controller.error(err));
+                        }
+                        read();
+                    }
+                })).blob();
+            })
+            .then(blob => {
+                status.innerText = "EXTRACTING INJECTOR 100%";
+                bar.style.width = "100%";
+
+                setTimeout(() => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    
+                    // Reset Tampilan setelah selesai eksekusi file
+                    button.innerText = "[ DOWNLOAD APK ]";
+                    button.disabled = false;
+                    container.style.display = "none";
+                    showToast("DOWNLOAD COMPLETED!");
+                }, 600);
+            })
+            .catch(() => {
+                button.innerText = "DOWNLOAD FAILED";
+                button.disabled = false;
+                container.style.display = "none";
+            });
+    }
+
+    /* LOCK DOWN PERTAHANAN KODE */
+    document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 123 || 
+            (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || 
+            (e.ctrlKey && e.keyCode == 85)) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    document.ondragstart = function() { return false; };
+
+    function showToast(text) {
+        const toast = document.getElementById('toast-notification');
+        toast.innerText = text;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function copyServerLink(targetId) {
+        navigator.clipboard.writeText(document.getElementById(targetId).innerText).then(() => {
+            showToast("LINK SERVER COPIED!");
+        });
+    }
+
+    // Gerbang masuk utama website
+    function breakTheGate() {
+        document.getElementById('cyber-audio').play().catch(()=>{});
+        document.getElementById('gate-keeper').classList.add('unlock');
+        setTimeout(typeWriterEffect, 1000);
+    }
+
+    /* MATRIX ANIMATION ENGINE */
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+    const alphabet = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const fontSize = 14; const columns = canvas.width / fontSize; const rainDrops = [];
+    for (let x = 0; x < columns; x++) rainDrops[x] = Math.random() * -100;
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#00ff41'; ctx.font = fontSize + 'px monospace';
+        for (let i = 0; i < rainDrops.length; i++) {
+            const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+            rainDrops[i]++;
+        }
+    }
+    setInterval(drawMatrix, 33);
+
+    /* WRITER ENGINE */
+    const bioData = [
+        { id: "type-name", prefix: "<strong>NAME:</strong> ", text: "BANG JAGO" },
+        { id: "type-status", prefix: "<strong>STATUS:</strong> ", text: "Self-Taught Web & Android Developer (Otodidak)" },
+        { id: "type-mission", prefix: "<strong>MISSION:</strong> ", text: "Melakukan reverse engineering, memodifikasi, dan merancang aplikasi Android serta platform web secara mandiri dari nol." },
+        { id: "type-note", prefix: "<strong>SYSTEM_NOTE:</strong> ", text: "Selamat datang di direktori penyimpanan berkas enkripsi (APK) buatan saya. Semua berkas di bawah ini aman untuk diunduh dan dieksekusi." }
+    ];
+    let currentLine = 0, currentChar = 0;
+    function typeWriterEffect() {
+        if (currentLine < bioData.length) {
+            const item = bioData[currentLine]; const element = document.getElementById(item.id);
+            element.classList.add("bio-cursor");
+            if (currentChar < item.text.length) {
+                element.innerHTML = item.prefix + item.text.substring(0, currentChar + 1);
+                currentChar++; setTimeout(typeWriterEffect, 25);
+            } else {
+                element.classList.remove("bio-cursor"); currentLine++; currentChar = 0;
+                setTimeout(typeWriterEffect, 200);
+            }
+        }
+    }
+</script>
+</body>
+</html>
