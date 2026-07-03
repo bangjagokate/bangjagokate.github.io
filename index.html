@@ -9,6 +9,8 @@
         :root {
             --play-green: #01875f;
             --play-green-hover: #006e4e;
+            --play-red-cancel: #d93025;
+            --play-red-hover: #b31412;
             --bg-light: #ffffff;
             --text-dark: #202124;
             --text-muted: #5f6368;
@@ -276,9 +278,17 @@
             text-align: center;
             cursor: pointer;
             height: 40px;
+            transition: background 0.2s;
         }
         .secure-download-btn:hover:not(:disabled) { background: var(--play-green-hover); }
         .secure-download-btn:disabled { background: #f1f3f4; color: var(--text-dark); cursor: not-allowed; }
+        
+        .secure-download-btn.cancel-mode {
+            background: var(--play-red-cancel);
+        }
+        .secure-download-btn.cancel-mode:hover {
+            background: var(--play-red-hover);
+        }
 
         .meta-specs-row {
             display: flex;
@@ -600,15 +610,40 @@
             serverUrl: "",
             fileName: "BangJago_Cloud.apk",
             payloadBase64: "aHR0cHM6Ly9iYW5namFnb2thdGUuZ2l0aHViLmlvL2Jhc2UuYXBr",
-            // DISISIPKAN FOTO UPDATE PREVIEW DARI KAMU KHUSUS UNTUK JAGO CLOUD
             screenshots: [
-                "https://i.ibb.co/Z1fKNfD1/3c5244a346f4.jpg",
-                "https://i.ibb.co/fGPV1Dvs/c0fcd884451c.jpg",
-                "https://i.ibb.co/zHGJQQK4/a43bae9b5a83.jpg",
-                "https://i.ibb.co/PG8w0mMW/c0611f05d005.jpg"
+                "https://i.ibb.co.com/Z1fKNfD1/3c5244a346f4.jpg",
+                "https://i.ibb.co.com/fGPV1Dvs/c0fcd884451c.jpg",
+                "https://i.ibb.co.com/zHGJQQK4/a43bae9b5a83.jpg",
+                "https://i.ibb.co.com/PG8w0mMW/c0611f05d005.jpg"
+            ]
+        },
+        {
+            id: 5,
+            title: "Jago Kasir",
+            edition: "Multi-Business Edition",
+            bgIcon: "#e2f1f8",
+            fillIcon: "#0288d1",
+            iconSvg: `<svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>`,
+            desc: "Aplikasi Kasir dan Manajemen Pintar yang dirancang multi-fungsi untuk mempermudah operasional berbagai jenis bidang usaha (Mulai dari Kafe/Kedai, Laundry/Binatu, Toko Kelontong/Ritel, hingga lini Usaha Lainnya) secara efisien, akurat, dan terintegrasi dalam satu genggaman. Mendukung input transaksi cepat, pengaturan manajemen produk dinamis, rekap omzet harian otomatis, notifikasi WhatsApp serta kustomisasi identitas profil toko.",
+            server: "Local Storage Engine",
+            protocol: "Smart POS Protocol",
+            serverUrl: "",
+            fileName: "JagoKasir_Laundry.apk",
+            payloadBase64: "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLzJvaWlzZC5hcGs=",
+            screenshots: [
+                "https://i.ibb.co.com/Jjrz96Nn/60ec8b1c9a24.jpg",
+                "https://i.ibb.co.com/6crWj0zg/26aa5570b0e6.jpg",
+                "https://i.ibb.co.com/tpbw29nf/0048735ecb54.jpg",
+                "https://i.ibb.co.com/Z6mCpQ5h/354aa0417de3.jpg",
+                "https://i.ibb.co.com/JW0PxgWC/78979a788e96.jpg",
+                "https://i.ibb.co.com/P0hBxP5/1a14482228f8.jpg",
+                "https://i.ibb.co.com/nsPNr5jM/a90148f66d88.jpg"
             ]
         }
     ];
+
+    // Simpan objek pengontrol pembatalan global untuk unduhan yang sedang berjalan
+    let currentDownloadController = null;
 
     const appListContainer = document.getElementById("store-app-list");
     appData.forEach(app => {
@@ -694,20 +729,44 @@
     }
 
     function backToStoreHome() {
+        // Jika pengguna kembali ke beranda saat mengunduh, batalkan unduhan secara otomatis agar aman
+        if (currentDownloadController) {
+            currentDownloadController.abort();
+            currentDownloadController = null;
+        }
         document.getElementById("detail-app-page").style.display = "none";
         document.getElementById("main-store-page").style.display = "block";
     }
 
     function executeSecureDownload(id) {
-        const app = appData.find(a => a.id === id);
-        
         const button = document.getElementById("active-download-btn");
         const btnText = document.getElementById("active-btn-text");
         const wrap = document.getElementById("detail-wrap");
         const ringSvg = document.getElementById("detail-ring-svg");
         const circle = document.getElementById("detail-circle");
 
-        button.disabled = true;
+        // Jika unduhan sedang berjalan dan tombol ditekan, maka lakukan PEMBATALAN (Cancel)
+        if (currentDownloadController) {
+            currentDownloadController.abort();
+            currentDownloadController = null;
+            
+            // Kembalikan tampilan tombol ke kondisi Install awal
+            button.classList.remove('cancel-mode');
+            btnText.innerText = "Install";
+            wrap.classList.remove('downloading');
+            ringSvg.style.display = 'none';
+            showToast("UNDUHAN DIBATALKAN");
+            return;
+        }
+
+        const app = appData.find(a => a.id === id);
+        
+        // Inisialisasi AbortController baru untuk mengontrol request unduhan saat ini
+        currentDownloadController = new AbortController();
+        const signal = currentDownloadController.signal;
+
+        // Ubah tombol menjadi mode pembatalan (gaya visual merah/Play Store)
+        button.classList.add('cancel-mode');
         wrap.classList.add('downloading');
         ringSvg.style.display = 'block';
         btnText.innerText = "Menghubungkan...";
@@ -718,7 +777,7 @@
 
         const targetUrl = atob(app.payloadBase64);
 
-        fetch(targetUrl)
+        fetch(targetUrl, { signal })
             .then(response => {
                 if (!response.ok) throw new Error("Network error");
                 const contentLength = response.headers.get('content-length');
@@ -740,7 +799,12 @@
                                 if (done) { controller.close(); return; }
                                 loaded += value.byteLength;
                                 const pct = Math.round((loaded / total) * 100);
-                                btnText.innerText = `Mengunduh (${pct}%)`;
+                                
+                                // Tetap perbarui label persentase teks mengunduh di tombol
+                                if (currentDownloadController) {
+                                    btnText.innerText = `Mengunduh (${pct}%)`;
+                                }
+                                
                                 const offset = circumference - (pct / 100) * circumference;
                                 circle.style.strokeDashoffset = offset;
                                 controller.enqueue(value);
@@ -756,6 +820,9 @@
                 circle.style.strokeDashoffset = 0;
 
                 setTimeout(() => {
+                    // Pastikan unduhan belum dibatalkan saat timeout selesai memproses
+                    if (!currentDownloadController) return;
+
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.style.display = 'none';
@@ -765,18 +832,24 @@
                     a.click();
                     window.URL.revokeObjectURL(url);
                     
+                    // Reset Tombol ke Default setelah instalasi berhasil dipicu
+                    currentDownloadController = null;
+                    button.classList.remove('cancel-mode');
                     btnText.innerText = "Install";
                     wrap.classList.remove('downloading');
                     ringSvg.style.display = 'none';
-                    button.disabled = false;
                     showToast("UNDUHAN SELESAI!");
                 }, 800);
             })
-            .catch(() => {
+            .catch(err => {
+                // Jangan tampilkan status gagal jika pembatalan dipicu secara sengaja oleh user
+                if (err.name === 'AbortError') return;
+
                 btnText.innerText = "Gagal Mengunduh";
+                currentDownloadController = null;
+                button.classList.remove('cancel-mode');
                 wrap.classList.remove('downloading');
                 ringSvg.style.display = 'none';
-                button.disabled = false;
             });
     }
 
