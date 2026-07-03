@@ -3,469 +3,720 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BANG JAGO | Cyber Archive</title>
+    <title>BANG JAGO | Play Store Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #000000;
-            --terminal-green: #00ff41;
-            --dim-green: #003b00;
-            --cyber-red: #ff0055;
-            --card-bg: rgba(0, 10, 0, 0.90);
-            --font-hacker: 'Courier New', Courier, monospace;
+            --play-green: #01875f;
+            --play-green-hover: #006e4e;
+            --bg-light: #ffffff;
+            --text-dark: #202124;
+            --text-muted: #5f6368;
+            --border-color: #dadce0;
+            --card-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+            --font-main: 'Roboto', sans-serif;
+            --font-title: 'Google Sans', sans-serif;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font-hacker);
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+            font-family: var(--font-main);
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--terminal-green);
+            background-color: #f8f9fa;
+            color: var(--text-dark);
             overflow-x: hidden;
         }
 
-        /* LAYAR PENUTUP UTAMA (OVERLAY) */
-        #gate-keeper {
-            position: fixed;
+        nav {
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #000000;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
-            padding: 20px;
+            z-index: 1000;
+            padding: 14px 0;
         }
 
-        #gate-keeper.unlock {
-            transform: translateY(-100vh);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .gate-box {
-            border: 1px solid var(--cyber-red);
-            padding: 35px 20px;
-            background: #020202;
-            box-shadow: 0 0 25px rgba(255, 0, 85, 0.25);
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
-            border-radius: 4px;
-        }
-
-        .gate-box h2 {
-            color: var(--cyber-red);
-            font-size: 1.2rem;
-            margin-bottom: 25px;
-            text-shadow: 0 0 10px var(--cyber-red);
-            letter-spacing: 2px;
-        }
-
-        .gate-box p {
-            color: #aaaaaa;
-            margin-bottom: 35px;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            text-align: justify;
-        }
-
-        .trigger-btn {
-            display: block;
-            width: 100%;
-            padding: 14px 10px;
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 5px var(--terminal-green);
-        }
-
-        .trigger-btn:hover {
-            background: rgba(0, 255, 65, 0.1);
-            box-shadow: 0 0 15px var(--terminal-green);
-        }
-
-        #matrix-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            opacity: 0.25;
-        }
-
-        .container {
-            max-width: 1200px;
+        .nav-container {
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        header {
-            border: 1px solid var(--terminal-green);
-            background: var(--card-bg);
-            padding: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 15px var(--dim-green);
-        }
-
-        .terminal-header {
+            padding: 0 24px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid var(--dim-green);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            color: #888;
-        }
-
-        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-        .dot-red { background: #ff5f56; }
-        .dot-yellow { background: #ffbd2e; }
-        .dot-green { background: #27c93f; }
-
-        header h1 {
-            font-size: calc(1.1rem + 1vw);
-            text-shadow: 0 0 10px var(--terminal-green);
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: 3px solid var(--terminal-green);
-            animation: typing 6s steps(22, end) infinite, blink-caret 0.75s step-end infinite;
-            max-width: fit-content;
-        }
-
-        @keyframes typing { 0%, 10%, 100% { width: 0; } 50%, 70% { width: 100%; } }
-        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--terminal-green); } }
-
-        .profil-section {
-            display: flex;
-            gap: 40px;
-            margin-bottom: 40px;
-            background: var(--card-bg);
-            border: 1px solid var(--terminal-green);
-            padding: 30px;
-            box-shadow: 0 0 15px var(--dim-green);
-        }
-
-        .foto-container { position: relative; flex-shrink: 0; }
-        .foto-container img {
-            width: 350px;
-            max-width: 100%;
-            filter: grayscale(100%) contrast(120%) brightness(90%);
-            border: 1px solid var(--terminal-green);
-            display: block;
-        }
-        .foto-container::after {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 65, 0.25) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
-        }
-
-        .bio { width: 100%; }
-        .bio h2 { font-size: 1.5rem; margin-bottom: 15px; border-bottom: 1px dashed var(--terminal-green); padding-bottom: 5px; }
-        .bio p { line-height: 1.6; margin-bottom: 15px; word-wrap: break-word; min-height: 24px; }
-        .bio-cursor::after { content: "_"; animation: blinker 0.8s linear infinite; color: var(--terminal-green); }
-        @keyframes blinker { 50% { opacity: 0; } }
-
-        .section-title { text-align: center; margin-bottom: 30px; font-size: 1.8rem; text-shadow: 0 0 8px var(--terminal-green); }
-
-        .aplikasi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .app-card {
-            background: var(--card-bg);
-            border: 1px solid var(--dim-green);
-            padding: 30px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
             justify-content: space-between;
         }
 
-        .app-card h3 { font-size: 1.2rem; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .app-card p { color: #b5b5b5; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.5; }
-
-        .server-link-box {
-            background: #050e05;
-            border: 1px dashed #005a0f;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 0.75rem;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--text-dark);
             cursor: pointer;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            color: #88ff88;
         }
 
-        .server-link-box:hover { background: #0a200a; border-color: var(--terminal-green); }
-
-        .app-meta {
-            font-size: 0.8rem;
-            color: var(--terminal-green);
-            opacity: 0.8;
-            margin-bottom: 15px;
-            border-top: 1px dashed var(--dim-green);
-            padding-top: 10px;
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 18px solid var(--play-green);
+            display: inline-block;
         }
 
-        /* ─── DESAIN ANIMASI PROGRESS BAR REAL-TIME ─── */
-        .progress-container {
-            display: none; /* Sembunyi secara bawaan, muncul saat download */
-            width: 100%;
-            background-color: #050e05;
-            border: 1px solid var(--dim-green);
-            padding: 4px;
-            margin-bottom: 15px;
-            border-radius: 2px;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 16px;
         }
 
-        .progress-bar {
-            height: 12px;
-            width: 0%; /* Diatur dinamis oleh JS */
-            background-color: var(--terminal-green);
-            box-shadow: 0 0 10px var(--terminal-green);
-            transition: width 0.1s linear;
+        #main-store-page {
+            display: block;
         }
 
-        .progress-status {
-            font-size: 0.75rem;
-            color: var(--terminal-green);
-            margin-bottom: 5px;
-            text-align: center;
-            text-shadow: 0 0 3px var(--terminal-green);
+        .profil-section {
+            display: flex;
+            gap: 24px;
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,.2);
+            align-items: center;
+        }
+
+        .foto-container img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--play-green);
+        }
+
+        .bio h2 { font-family: var(--font-title); font-size: 1.5rem; margin-bottom: 4px; }
+        .bio .dev-tag { color: var(--play-green); font-weight: 500; font-size: 0.85rem; margin-bottom: 6px; }
+        .bio p { color: var(--text-muted); line-height: 1.5; font-size: 0.85rem; }
+
+        .section-title {
+            font-family: var(--font-title);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding-left: 8px;
+        }
+
+        .aplikasi-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .app-row-card {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .app-row-card:hover {
+            box-shadow: var(--card-shadow);
+            transform: translateY(-2px);
+        }
+
+        .app-row-left {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .app-icon-box {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+        }
+
+        .app-icon-box svg { width: 30px; height: 30px; }
+
+        .app-row-info h3 {
+            font-family: var(--font-title);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .app-row-info .edition-tag {
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: #f1f3f4;
+            color: var(--text-muted);
+        }
+
+        .btn-view-detail {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--play-green);
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .app-row-card:hover .btn-view-detail {
+            background: #e8f0fe;
+            border-color: transparent;
+        }
+
+        #detail-app-page {
+            display: none;
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,.2);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 24px;
+        }
+
+        .btn-back:hover { color: var(--text-dark); }
+
+        .detail-header-block {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .icon-wrapper-detail {
+            position: relative;
+            width: 72px;
+            height: 72px;
+        }
+
+        .detail-icon-box {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0; left: 0; z-index: 2;
+            transition: all 0.3s;
+        }
+        .detail-icon-box svg { width: 40px; height: 40px; }
+
+        .progress-ring-svg {
+            position: absolute;
+            top: -6px; left: -6px;
+            width: 84px; height: 84px;
+            transform: rotate(-90deg);
+            z-index: 1;
+            display: none;
+        }
+        .progress-ring-circle-bg { fill: transparent; stroke: #e8eaed; stroke-width: 3; }
+        .progress-ring-circle {
+            fill: transparent; stroke: var(--play-green); stroke-width: 3;
+            stroke-dasharray: 245; stroke-dashoffset: 245;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .icon-wrapper-detail.downloading .detail-icon-box { transform: scale(0.8); }
+
+        .detail-title-box h2 { font-family: var(--font-title); font-size: 1.5rem; font-weight: 500; margin-bottom: 4px;}
+        .detail-title-box .dev-name { color: var(--play-green); font-size: 0.9rem; font-weight: 500; }
+
+        .action-container {
+            margin-bottom: 24px;
         }
 
         .secure-download-btn {
             display: block;
             width: 100%;
-            padding: 12px;
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            text-align: center;
-            font-weight: bold;
+            max-width: 250px;
+            padding: 10px 24px;
+            background: var(--play-green);
+            border: none;
+            color: #ffffff;
+            border-radius: 24px;
+            font-weight: 500;
             font-size: 0.9rem;
+            text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
+            height: 40px;
+        }
+        .secure-download-btn:hover:not(:disabled) { background: var(--play-green-hover); }
+        .secure-download-btn:disabled { background: #f1f3f4; color: var(--text-dark); cursor: not-allowed; }
+
+        .meta-specs-row {
+            display: flex;
+            gap: 24px;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 0;
+            margin-bottom: 24px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .meta-item strong { color: var(--text-dark); display: block; font-size: 0.95rem; margin-bottom: 2px;}
+
+        .server-link-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            gap: 12px;
+        }
+        
+        .server-link-box:hover {
+            background: #e8f0fe;
+            border-color: #aecbfa;
         }
 
-        .secure-download-btn:hover:not(:disabled) { background: var(--terminal-green); color: #000; box-shadow: 0 0 10px var(--terminal-green); }
-        .secure-download-btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+        .server-box-left {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        .server-box-left .label-text {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .server-box-left .url-text {
+            font-size: 0.85rem;
+            color: var(--play-green);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .server-box-right-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--play-green);
+            flex-shrink: 0;
+        }
+
+        .screenshot-gallery-title { font-family: var(--font-title); font-size: 1.1rem; margin-bottom: 12px; font-weight: 500; }
+        
+        .screenshot-scroll-x {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            margin-bottom: 24px;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+        }
+        .screenshot-scroll-x::-webkit-scrollbar { height: 6px; }
+        .screenshot-scroll-x::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 4px; }
+
+        .screenshot-card-img {
+            width: 140px;
+            height: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            cursor: zoom-in;
+            transition: transform 0.2s;
+        }
+        .screenshot-card-img:hover { transform: scale(1.02); }
+
+        .detail-desc-block h3 { font-family: var(--font-title); font-size: 1.1rem; margin-bottom: 8px; font-weight: 500; }
+        .detail-desc-block p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; text-align: justify; }
+
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .lightbox-modal.show { display: flex; opacity: 1; }
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 85%;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.25s ease;
+        }
+        .lightbox-modal.show .lightbox-content { transform: scale(1); }
 
         #toast-notification {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
+            bottom: 24px; left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: var(--terminal-green);
-            color: #000;
-            padding: 10px 20px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            z-index: 10000;
-            transition: transform 0.3s ease;
-            box-shadow: 0 0 15px var(--terminal-green);
+            background: #323232; color: #ffffff;
+            padding: 12px 24px; border-radius: 4px;
+            font-size: 0.85rem; z-index: 10000;
+            transition: transform 0.2s ease;
+            box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14);
         }
         #toast-notification.show { transform: translateX(-50%) translateY(0); }
 
-        footer { text-align: center; padding: 30px 0; border-top: 1px solid var(--dim-green); background: var(--card-bg); font-size: 0.8rem; }
-        @media (max-width: 768px) { .profil-section { flex-direction: column; align-items: center; } .foto-container img { width: 100%; max-width: 280px; } }
+        footer {
+            text-align: center; padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-light); color: var(--text-muted); font-size: 0.85rem;
+            margin-top: 40px;
+        }
     </style>
 </head>
-<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+<body>
 
-<div id="toast-notification">LINK SERVER COPIED!</div>
+<div id="toast-notification">LINK SERVER BERHASIL DISALIN!</div>
 
-<div id="gate-keeper">
-    <div class="gate-box">
-        <h2>[ SYSTEM ENCRYPTED ]</h2>
-        <p>Direktori aman milik BANG JAGO terdeteksi. Silakan inisialisasi kunci enkripsi untuk membuka gerbang utama dan memuat repositori sistem berkas berkriptografi.</p>
-        <button class="trigger-btn" onclick="breakTheGate()">ACCESS MAIN SYSTEM</button>
-    </div>
+<div class="lightbox-modal" id="lightbox" onclick="closeLightbox()">
+    <img class="lightbox-content" id="lightbox-img" src="" alt="Enlarged Preview">
 </div>
 
-<canvas id="matrix-canvas"></canvas>
-
-<audio id="cyber-audio" loop>
-    <source src="https://files.catbox.moe/1jky99.mp3" type="audio/mpeg">
-</audio>
+<nav>
+    <div class="nav-container">
+        <div class="logo" onclick="backToStoreHome()">
+            <div class="play-icon"></div>
+            <span>Google Play <span style="color:var(--text-muted); font-size: 0.9rem; font-weight: normal;">| Dev Console</span></span>
+        </div>
+    </div>
+</nav>
 
 <div class="container">
-    <header>
-        <div class="terminal-header">
-            <span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span>
-            <span>bangjago@mainframe:~</span>
-        </div>
-        <div class="typing-wrapper"><h1>[root@BANG_JAGO]:~$ </h1></div>
-    </header>
-
     <main>
-        <section class="profil-section">
-            <div class="foto-container">
-                <img src="https://i.ibb.co.com/fY6WJP4z/Generated-Image-September-19-2025-6-23-PM.png" alt="Bang Jago Profile">
+        
+        <!-- HALAMAN UTAMA -->
+        <section id="main-store-page">
+            <div class="profil-section">
+                <div class="foto-container">
+                    <img src="https://i.ibb.co.com/fY6WJP4z/Generated-Image-September-19-2025-6-23-PM.png" alt="Bang Jago Profile">
+                </div>
+                <div class="bio">
+                    <h2>BANG JAGO</h2>
+                    <div class="dev-tag">Verified Android & Web Developer (Otodidak)</div>
+                    <p>Melakukan reverse engineering, memodifikasi, dan merancang aplikasi Android serta platform web secara mandiri dari nol.</p>
+                </div>
             </div>
-            <div class="bio">
-                <h2>> IDENTITY_INFO</h2>
-                <p id="type-name"></p><p id="type-status"></p><p id="type-mission"></p><p id="type-note"></p>
-            </div>
+
+            <h2 class="section-title">Aplikasi Populer</h2>
+            <div class="aplikasi-list" id="store-app-list"></div>
         </section>
 
-        <h2 class="section-title">> AVAILABLE_PAYLOADS (APK)</h2>
-        <section class="aplikasi-grid">
+        <!-- HALAMAN DETAIL -->
+        <section id="detail-app-page">
+            <button class="btn-back" onclick="backToStoreHome()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                Kembali
+            </button>
             
-            <div class="app-card">
-                <div>
-                    <h3>WalkieTalkie <span style="color: var(--terminal-green); font-size:0.8rem;">[FB_EDITION]</span></h3>
-                    <p>Aplikasi komunikasi suara waktu nyata (real-time) yang dibangun secara otodidak, memanfaatkan infrastruktur awan Firebase Server untuk transfer data instan.</p>
+            <div class="detail-header-block">
+                <div class="icon-wrapper-detail" id="detail-wrap">
+                    <svg class="progress-ring-svg" id="detail-ring-svg">
+                        <circle class="progress-ring-circle-bg" cx="42" cy="42" r="39"/>
+                        <circle class="progress-ring-circle" id="detail-circle" cx="42" cy="42" r="39"/>
+                    </svg>
+                    <div class="detail-icon-box" id="detail-icon-target"></div>
                 </div>
-                <div>
-                    <div class="app-meta"><div>SERVER: Firebase Cloud</div><div>TYPE: Voice Protocol</div></div>
-                    
-                    <div class="progress-container" id="p-container-fb">
-                        <div class="progress-status" id="p-status-fb">PREPARING...</div>
-                        <div class="progress-bar" id="p-bar-fb"></div>
-                    </div>
-                    
-                    <button class="secure-download-btn" id="btn-fb" onclick="secureDownload(0, 'WalkieTalkie_FB.apk', 'btn-fb', 'p-container-fb', 'p-bar-fb', 'p-status-fb')">[ DOWNLOAD APK ]</button>
+                <div class="detail-title-box">
+                    <h2 id="detail-title">Nama Aplikasi</h2>
+                    <div class="dev-name">BANG JAGO &bull; <span id="detail-edition" style="color:var(--text-muted)">Edition</span></div>
                 </div>
             </div>
 
-            <div class="app-card">
-                <div>
-                    <h3>WalkieTalkie <span style="color: #00d2ff; font-size:0.8rem;">[SS_EDITION]</span></h3>
-                    <p>Aplikasi variasi WalkieTalkie yang dirancang menggunakan basis data dan arsitektur pengolahan Google Spreadsheets Server.</p>
-                    <div class="server-link-box" onclick="copyServerLink('server-url-1')">
-                        <strong>[TAP TO COPY SERVER URL]</strong><br><span id="server-url-1">https://script.google.com/macros/s/AKfycbwBh8DsLG21j9p3Z7fkc2azX6srjendTVcjCafpyG7z8ZMiUHf0NTCx-tt9iylKxUyRVA/exec</span>
-                    </div>
+            <div class="action-container" id="detail-action-block"></div>
+
+            <div class="meta-specs-row">
+                <div class="meta-item">
+                    <strong>Server Awan</strong>
+                    <span id="detail-meta-server">-</span>
                 </div>
-                <div>
-                    <div class="app-meta"><div>SERVER: Spreadsheets</div><div>NOTE: Input di tab server</div></div>
-                    
-                    <div class="progress-container" id="p-container-ss">
-                        <div class="progress-status" id="p-status-ss">PREPARING...</div>
-                        <div class="progress-bar" id="p-bar-ss"></div>
-                    </div>
-                    
-                    <button class="secure-download-btn" id="btn-ss" onclick="secureDownload(1, 'WalkieTalkie_SS.apk', 'btn-ss', 'p-container-ss', 'p-bar-ss', 'p-status-ss')">[ DOWNLOAD APK ]</button>
+                <div class="meta-item">
+                    <strong>Protokol Data</strong>
+                    <span id="detail-meta-proto">-</span>
                 </div>
             </div>
 
-            <div class="app-card">
-                <div>
-                    <h3>Chating Global <span style="color: #ffbd2e; font-size:0.8rem;">[SS_EDITION]</span></h3>
-                    <p>Mendukung chatting room global, chatting privat perorangan, transmisi teks, pesan suara (voice), serta pengiriman lokasi waktu nyata via Spreadsheet.</p>
-                    <div class="server-link-box" onclick="copyServerLink('server-url-2')">
-                        <strong>[TAP TO COPY SERVER URL]</strong><br><span id="server-url-2">https://script.google.com/macros/s/AKfycbz8-iboQCS-5xfYK15uOv8IfP0nZKD8Hm8ceNbb2Edlk4BURB-VinVa7Q5bq75jXis/exec</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="app-meta"><div>SERVER: Spreadsheets</div><div>NOTE: Input di pengaturan</div></div>
-                    
-                    <div class="progress-container" id="p-container-cg">
-                        <div class="progress-status" id="p-status-cg">PREPARING...</div>
-                        <div class="progress-bar" id="p-bar-cg"></div>
-                    </div>
-                    
-                    <button class="secure-download-btn" id="btn-cg" onclick="secureDownload(2, 'ChatingGlobal.apk', 'btn-cg', 'p-container-cg', 'p-bar-cg', 'p-status-cg')">[ DOWNLOAD APK ]</button>
-                </div>
+            <div id="detail-server-box-wrapper"></div>
+
+            <div id="detail-screenshot-section">
+                <h3 class="screenshot-gallery-title">Pratinjau Aplikasi</h3>
+                <div class="screenshot-scroll-x" id="detail-screenshot-gallery"></div>
             </div>
 
-            <div class="app-card">
-                <div>
-                    <h3>Chatio <span style="color: var(--cyber-red); font-size:0.8rem;">[SOCKET_EDITION]</span></h3>
-                    <p>Aplikasi chatting mutakhir berbasis arsitektur Socket instan. Dilengkapi fitur linimasa status yang interaktif serta penambahan teman menggunakan PIN kustom layaknya BBM.</p>
-                </div>
-                <div>
-                    <div class="app-meta"><div>ENGINE: WebSockets</div><div>FEATURES: Status Comm & PIN System</div></div>
-                    
-                    <div class="progress-container" id="p-container-co">
-                        <div class="progress-status" id="p-status-co">PREPARING...</div>
-                        <div class="progress-bar" id="p-bar-co"></div>
-                    </div>
-                    
-                    <button class="secure-download-btn" id="btn-co" onclick="secureDownload(3, 'Chatio_Socket.apk', 'btn-co', 'p-container-co', 'p-bar-co', 'p-status-co')">[ DOWNLOAD APK ]</button>
-                </div>
+            <div class="detail-desc-block">
+                <h3>Tentang aplikasi ini</h3>
+                <p id="detail-description">Deskripsi lengkap dari aplikasi.</p>
             </div>
-
-            <div class="app-card">
-                <div>
-                    <h3>Bang Jago Cloud <span style="color: #ff00ff; font-size:0.8rem;">[CLOUD_EDITION]</span></h3>
-                    <p>Platform utilitas penyimpanan mandiri canggih untuk mengunggah, menyimpan, dan membagikan segala jenis file secara gratis tanpa batas ruang.</p>
-                </div>
-                <div>
-                    <div class="app-meta"><div>SERVER: Catbox Secure Storage</div><div>TYPE: Secure File Vault</div></div>
-                    
-                    <div class="progress-container" id="p-container-bjc">
-                        <div class="progress-status" id="p-status-bjc">PREPARING...</div>
-                        <div class="progress-bar" id="p-bar-bjc"></div>
-                    </div>
-                    
-                    <button class="secure-download-btn" id="btn-bjc" onclick="secureDownload(4, 'BangJago_Cloud.apk', 'btn-bjc', 'p-container-bjc', 'p-bar-bjc', 'p-status-bjc')">[ DOWNLOAD APK ]</button>
-                </div>
-            </div>
-
         </section>
+
     </main>
 
-    <footer><p>bang_jago@system_override // &copy; 2026. All Connections Encrypted.</p></footer>
+    <footer><p>&copy; 2026 Bang Jago Console. Dibuat dengan standar Google Material Design.</p></footer>
 </div>
 
 <script>
-    /* =======================================================
-       DEKRIPSI LINK LINK SECURE OBFLUSCATED BASE64
-       ======================================================= */
-    const _0xPayloads = [
-        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL3NiMHF6NS5hcGs=", // FB WalkieTalkie
-        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLzB5aDBqZS5hcGs=", // SS WalkieTalkie
-        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLY2R3Z3ouYXBr", // Chating Global
-        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLzIzNndkZy5hcGs=", // Chatio
-        "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL3Z5NGdrNS5hcGs="  // Bang Jago Cloud (UPDATED)
+    const appData = [
+        {
+            id: 0,
+            title: "WalkieTalkie",
+            edition: "FB Edition",
+            bgIcon: "#e8f0fe",
+            fillIcon: "#1a73e8",
+            iconSvg: `<svg viewBox="0 0 24 24"><path d="M12 2C7.58 2 4 5.58 4 10c0 2.5 1.14 4.73 2.93 6.22L5.5 21.5c-.28.77.28 1.5 1.1 1.5h10.8c.82 0 1.38-.73 1.1-1.5l-1.43-5.28C18.86 14.73 20 12.5 20 10c0-4.42-3.58-8-8-8zm0 3c2.76 0 5 2.24 5 5s-2.24 5-5 5-5-2.24-5-5 2.24-5 5-5zm0 3c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>`,
+            desc: "Aplikasi komunikasi suara waktu nyata (real-time) yang dibangun secara otodidak, memanfaatkan infrastruktur awan Firebase Server untuk transfer data instan berkecepatan tinggi tanpa hambatan delay.",
+            server: "Firebase Cloud",
+            protocol: "Voice Protocol",
+            serverUrl: "",
+            fileName: "WalkieTalkie_FB.apk",
+            payloadBase64: "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL3NiMHF6NS5hcGs=",
+            screenshots: [
+                "https://i.ibb.co.com/9HPN0LvB/Screenshot-2026-07-03-08-57-28-519-com-aistudio-walkietalkie-qpxzrt.jpg",
+                "https://i.ibb.co.com/wh9q3C4y/Screenshot-2026-07-03-08-57-31-906-com-aistudio-walkietalkie-qpxzrt.jpg",
+                "https://i.ibb.co.com/zhvy6yR5/Screenshot-2026-07-03-08-57-37-220-com-aistudio-walkietalkie-qpxzrt.jpg"
+            ]
+        },
+        {
+            id: 1,
+            title: "WalkieTalkie",
+            edition: "SS Edition",
+            bgIcon: "#e6f4ea",
+            fillIcon: "#137333",
+            iconSvg: `<svg viewBox="0 0 24 24"><path d="M12 2C7.58 2 4 5.58 4 10c0 2.5 1.14 4.73 2.93 6.22L5.5 21.5c-.28.77.28 1.5 1.1 1.5h10.8c.82 0 1.38-.73 1.1-1.5l-1.43-5.28C18.86 14.73 20 12.5 20 10c0-4.42-3.58-8-8-8zm0 4c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4z"/></svg>`,
+            desc: "Aplikasi variasi komunikasi WalkieTalkie ptt yang dikembangkan secara cerdas menggunakan basis data arsitektur pengolahan data Google Spreadsheets Server.",
+            server: "Spreadsheets Server",
+            protocol: "Input Tab Server",
+            serverUrl: "https://script.google.com/macros/s/AKfycbwBh8DsLG21j9p3Z7fkc2azX6srjendTVcjCafpyG7z8ZMiUHf0NTCx-tt9iylKxUyRVA/exec",
+            fileName: "WalkieTalkie_SS.apk",
+            payloadBase64: "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLzB5aDBqZS5hcGs=",
+            screenshots: [
+                "https://i.ibb.co.com/9kpWrcMW/Screenshot-2026-07-03-09-30-36-844-com-aistudio-walkiesheet-pkrqtz.jpg",
+                "https://i.ibb.co.com/bMGJ2V1p/Screenshot-2026-07-03-09-30-41-731-com-aistudio-walkiesheet-pkrqtz.jpg",
+                "https://i.ibb.co.com/20wVhdqr/Screenshot-2026-07-03-09-30-54-916-com-aistudio-walkiesheet-pkrqtz.jpg",
+                "https://i.ibb.co.com/N6F6GjsL/Screenshot-2026-07-03-09-30-57-993-com-aistudio-walkiesheet-pkrqtz.jpg",
+                "https://i.ibb.co.com/rGrCdC6t/Screenshot-2026-07-03-08-57-37-220-com-aistudio-walkietalkie-qpxzrt.jpg"
+            ]
+        },
+        {
+            id: 2,
+            title: "Chating Global",
+            edition: "SS Edition",
+            bgIcon: "#fef7e0",
+            fillIcon: "#b06000",
+            iconSvg: `<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>`,
+            desc: "Mendukung ruang obrolan chatting room global publik, obrolan privat enkripsi perorangan, transmisi teks kilat, pesan berkas rekaman suara (voice note), serta sinkronisasi penunjuk lokasi koordinat peta waktu nyata via Spreadsheet.",
+            server: "Spreadsheets Server",
+            protocol: "Input Pengaturan",
+            serverUrl: "https://script.google.com/macros/s/AKfycbz8-iboQCS-5xfYK15uOv8IfP0nZKD8Hm8ceNbb2Edlk4BURB-VinVa7Q5bq75jXis/exec",
+            fileName: "ChatingGlobal.apk",
+            payloadBase64: "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL2JjZHdnei5hcGs=",
+            screenshots: [
+                "https://i.ibb.co.com/HLdpVgsy/f3d7a7aa5c7f.jpg",
+                "https://i.ibb.co.com/MDRpzXqw/71f4dfe71470.jpg",
+                "https://i.ibb.co.com/PzbXLS6y/da482d079424.jpg",
+                "https://i.ibb.co.com/xqWkkP2y/b23998d8b69a.jpg",
+                "https://i.ibb.co.com/LDRQyTzL/40266f36ef8e.jpg"
+            ]
+        },
+        {
+            id: 3,
+            title: "Chatio",
+            edition: "Socket Edition",
+            bgIcon: "#fce8e6",
+            fillIcon: "#c5221f",
+            iconSvg: `<svg viewBox="0 0 24 24"><path d="M15 4v7H5.17L4 12.17V4h11m1-2H3c-1.1 0-2 .9-2 2v12l4-4h11c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm5 4v12H7l-4 4h16c1.1 0 2-.9 2-2V6h-2z"/></svg>`,
+            desc: "Aplikasi chatting interaktif mutakhir berbasis arsitektur Socket instan berkecepatan tinggi. Dilengkapi fitur linimasa status linier serta sistem penambahan lingkaran teman menggunakan PIN kustom layaknya platform BBM legendaris.",
+            server: "WebSockets Engine",
+            protocol: "Status & PIN System",
+            serverUrl: "",
+            fileName: "Chatio_Socket.apk",
+            payloadBase64: "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLzFnNmJkMy5hcGs=",
+            screenshots: [
+                "https://i.ibb.co.com/MxGkzL1X/d915f6a92b3c.jpg",
+                "https://i.ibb.co.com/Z6dxH9VL/319b79ac6df3.jpg",
+                "https://i.ibb.co.com/BV1NzwVY/b54663c953a5.jpg",
+                "https://i.ibb.co.com/d4gz9cQQ/96ccbc5b42c9.jpg",
+                "https://i.ibb.co.com/YBbnf0kk/48ae42535c3e.jpg"
+            ]
+        },
+        {
+            id: 4,
+            title: "Bang Jago Cloud",
+            edition: "Cloud Edition",
+            bgIcon: "#f3e5f5",
+            fillIcon: "#7b1fa2",
+            iconSvg: `<svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/></svg>`,
+            desc: "Platform utilitas penyimpanan mandiri canggih untuk mengunggah, menyimpan, mengamankan, dan membagikan segala jenis berkas secara instan gratis tanpa batasan ruang limit kuota penyimpanan.",
+            server: "Catbox Storage",
+            protocol: "Secure File Vault",
+            serverUrl: "",
+            fileName: "BangJago_Cloud.apk",
+            payloadBase64: "aHR0cHM6Ly9iYW5namFnb2thdGUuZ2l0aHViLmlvL2Jhc2UuYXBr",
+            // DISISIPKAN FOTO UPDATE PREVIEW DARI KAMU KHUSUS UNTUK JAGO CLOUD
+            screenshots: [
+                "https://i.ibb.co/Z1fKNfD1/3c5244a346f4.jpg",
+                "https://i.ibb.co/fGPV1Dvs/c0fcd884451c.jpg",
+                "https://i.ibb.co/zHGJQQK4/a43bae9b5a83.jpg",
+                "https://i.ibb.co/PG8w0mMW/c0611f05d005.jpg"
+            ]
+        }
     ];
 
-    function secureDownload(index, fileName, buttonId, containerId, barId, statusId) {
-        const button = document.getElementById(buttonId);
-        const container = document.getElementById(containerId);
-        const bar = document.getElementById(barId);
-        const status = document.getElementById(statusId);
-        
-        button.disabled = true;
-        button.innerText = "CONNECTING...";
-        
-        // Memunculkan Bar Animasi Unduhan
-        container.style.display = "block";
-        bar.style.width = "0%";
-        status.innerText = "INITIALIZING CONNECT...";
+    const appListContainer = document.getElementById("store-app-list");
+    appData.forEach(app => {
+        const card = document.createElement("div");
+        card.className = "app-row-card";
+        card.setAttribute("onclick", `openAppDetail(${app.id})`);
+        card.innerHTML = `
+            <div class="app-row-left">
+                <div class="app-icon-box" style="background: ${app.bgIcon}; fill: ${app.fillIcon};">
+                    ${app.iconSvg}
+                </div>
+                <div class="app-row-info">
+                    <h3>${app.title}</h3>
+                    <span class="edition-tag">${app.edition}</span>
+                </div>
+            </div>
+            <button class="btn-view-detail">Lihat Detail</button>
+        `;
+        appListContainer.appendChild(card);
+    });
 
-        const targetUrl = atob(_0xPayloads[index]);
+    function openAppDetail(id) {
+        const app = appData.find(a => a.id === id);
+        if(!app) return;
+
+        document.getElementById("detail-title").innerText = app.title;
+        document.getElementById("detail-edition").innerText = app.edition;
+        document.getElementById("detail-description").innerText = app.desc;
+        document.getElementById("detail-meta-server").innerText = app.server;
+        document.getElementById("detail-meta-proto").innerText = app.protocol;
+        
+        const iconTarget = document.getElementById("detail-icon-target");
+        iconTarget.style.background = app.bgIcon;
+        iconTarget.style.fill = app.fillIcon;
+        iconTarget.innerHTML = app.iconSvg;
+
+        const actionBlock = document.getElementById("detail-action-block");
+        actionBlock.innerHTML = `
+            <button class="secure-download-btn" id="active-download-btn" onclick="executeSecureDownload(${app.id})">
+                <span id="active-btn-text">Install</span>
+            </button>
+        `;
+
+        const serverWrapper = document.getElementById("detail-server-box-wrapper");
+        if(app.serverUrl) {
+            serverWrapper.innerHTML = `
+                <div class="server-link-box" onclick="copyServerLink('detail-url-string')">
+                    <div class="server-box-left">
+                        <span class="label-text">Tautan URL Server</span>
+                        <span class="url-text" id="detail-url-string">${app.serverUrl}</span>
+                    </div>
+                    <div class="server-box-right-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                    </div>
+                </div>
+            `;
+        } else {
+            serverWrapper.innerHTML = "";
+        }
+
+        const gallery = document.getElementById("detail-screenshot-gallery");
+        const gallerySection = document.getElementById("detail-screenshot-section");
+        gallery.innerHTML = "";
+        
+        if(app.screenshots && app.screenshots.length > 0) {
+            gallerySection.style.display = "block";
+            app.screenshots.forEach(url => {
+                const img = document.createElement("img");
+                img.className = "screenshot-card-img";
+                img.src = url;
+                img.setAttribute("onclick", `openLightbox('${url}')`);
+                gallery.appendChild(img);
+            });
+        } else {
+            gallerySection.style.display = "none";
+        }
+
+        document.getElementById("main-store-page").style.display = "none";
+        document.getElementById("detail-app-page").style.display = "block";
+        window.scrollTo(0, 0);
+    }
+
+    function backToStoreHome() {
+        document.getElementById("detail-app-page").style.display = "none";
+        document.getElementById("main-store-page").style.display = "block";
+    }
+
+    function executeSecureDownload(id) {
+        const app = appData.find(a => a.id === id);
+        
+        const button = document.getElementById("active-download-btn");
+        const btnText = document.getElementById("active-btn-text");
+        const wrap = document.getElementById("detail-wrap");
+        const ringSvg = document.getElementById("detail-ring-svg");
+        const circle = document.getElementById("detail-circle");
+
+        button.disabled = true;
+        wrap.classList.add('downloading');
+        ringSvg.style.display = 'block';
+        btnText.innerText = "Menghubungkan...";
+
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        circle.style.strokeDashoffset = circumference;
+
+        const targetUrl = atob(app.payloadBase64);
 
         fetch(targetUrl)
             .then(response => {
@@ -473,8 +724,8 @@
                 const contentLength = response.headers.get('content-length');
                 
                 if (!contentLength) {
-                    status.innerText = "DOWNLOADING (STREAMING)...";
-                    bar.style.width = "50%"; // Bar default jika size tidak terbaca server
+                    btnText.innerText = "Mengunduh...";
+                    circle.style.strokeDashoffset = circumference / 2;
                     return response.blob();
                 }
                 
@@ -488,12 +739,10 @@
                             reader.read().then(({ done, value }) => {
                                 if (done) { controller.close(); return; }
                                 loaded += value.byteLength;
-                                
-                                // KALKULASI PERSEN REAL-TIME UNTUK PROGESS BAR ANIMASI
                                 const pct = Math.round((loaded / total) * 100);
-                                bar.style.width = pct + "%";
-                                status.innerText = `DOWNLOADING... ${pct}%`;
-                                
+                                btnText.innerText = `Mengunduh (${pct}%)`;
+                                const offset = circumference - (pct / 100) * circumference;
+                                circle.style.strokeDashoffset = offset;
                                 controller.enqueue(value);
                                 read();
                             }).catch(err => controller.error(err));
@@ -503,44 +752,44 @@
                 })).blob();
             })
             .then(blob => {
-                status.innerText = "EXTRACTING INJECTOR 100%";
-                bar.style.width = "100%";
+                btnText.innerText = "Memproses...";
+                circle.style.strokeDashoffset = 0;
 
                 setTimeout(() => {
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = url;
-                    a.download = fileName;
+                    a.download = app.fileName;
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(url);
                     
-                    // Reset Tampilan setelah selesai eksekusi file
-                    button.innerText = "[ DOWNLOAD APK ]";
+                    btnText.innerText = "Install";
+                    wrap.classList.remove('downloading');
+                    ringSvg.style.display = 'none';
                     button.disabled = false;
-                    container.style.display = "none";
-                    showToast("DOWNLOAD COMPLETED!");
-                }, 600);
+                    showToast("UNDUHAN SELESAI!");
+                }, 800);
             })
             .catch(() => {
-                button.innerText = "DOWNLOAD FAILED";
+                btnText.innerText = "Gagal Mengunduh";
+                wrap.classList.remove('downloading');
+                ringSvg.style.display = 'none';
                 button.disabled = false;
-                container.style.display = "none";
             });
     }
 
-    /* LOCK DOWN PERTAHANAN KODE */
-    document.addEventListener('keydown', function(e) {
-        if (e.keyCode == 123 || 
-            (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || 
-            (e.ctrlKey && e.keyCode == 85)) {
-            e.preventDefault();
-            return false;
-        }
-    });
+    function openLightbox(url) {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        lightboxImg.src = url;
+        lightbox.classList.add("show");
+    }
 
-    document.ondragstart = function() { return false; };
+    function closeLightbox() {
+        document.getElementById("lightbox").classList.remove("show");
+    }
 
     function showToast(text) {
         const toast = document.getElementById('toast-notification');
@@ -551,57 +800,8 @@
 
     function copyServerLink(targetId) {
         navigator.clipboard.writeText(document.getElementById(targetId).innerText).then(() => {
-            showToast("LINK SERVER COPIED!");
+            showToast("LINK SERVER BERHASIL DISALIN!");
         });
-    }
-
-    // Gerbang masuk utama website
-    function breakTheGate() {
-        document.getElementById('cyber-audio').play().catch(()=>{});
-        document.getElementById('gate-keeper').classList.add('unlock');
-        setTimeout(typeWriterEffect, 1000);
-    }
-
-    /* MATRIX ANIMATION ENGINE */
-    const canvas = document.getElementById('matrix-canvas');
-    const ctx = canvas.getContext('2d');
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    resizeCanvas(); window.addEventListener('resize', resizeCanvas);
-    const alphabet = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    const fontSize = 14; const columns = canvas.width / fontSize; const rainDrops = [];
-    for (let x = 0; x < columns; x++) rainDrops[x] = Math.random() * -100;
-    function drawMatrix() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#00ff41'; ctx.font = fontSize + 'px monospace';
-        for (let i = 0; i < rainDrops.length; i++) {
-            const text = alphabet[Math.floor(Math.random() * alphabet.length)];
-            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-            rainDrops[i]++;
-        }
-    }
-    setInterval(drawMatrix, 33);
-
-    /* WRITER ENGINE */
-    const bioData = [
-        { id: "type-name", prefix: "<strong>NAME:</strong> ", text: "BANG JAGO" },
-        { id: "type-status", prefix: "<strong>STATUS:</strong> ", text: "Self-Taught Web & Android Developer (Otodidak)" },
-        { id: "type-mission", prefix: "<strong>MISSION:</strong> ", text: "Melakukan reverse engineering, memodifikasi, dan merancang aplikasi Android serta platform web secara mandiri dari nol." },
-        { id: "type-note", prefix: "<strong>SYSTEM_NOTE:</strong> ", text: "Selamat datang di direktori penyimpanan berkas enkripsi (APK) buatan saya. Semua berkas di bawah ini aman untuk diunduh dan dieksekusi." }
-    ];
-    let currentLine = 0, currentChar = 0;
-    function typeWriterEffect() {
-        if (currentLine < bioData.length) {
-            const item = bioData[currentLine]; const element = document.getElementById(item.id);
-            element.classList.add("bio-cursor");
-            if (currentChar < item.text.length) {
-                element.innerHTML = item.prefix + item.text.substring(0, currentChar + 1);
-                currentChar++; setTimeout(typeWriterEffect, 25);
-            } else {
-                element.classList.remove("bio-cursor"); currentLine++; currentChar = 0;
-                setTimeout(typeWriterEffect, 200);
-            }
-        }
     }
 </script>
 </body>
